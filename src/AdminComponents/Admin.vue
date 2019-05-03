@@ -123,33 +123,37 @@ export default {
     },
     fillDishes: function() {
       db.collection("dishes")
-        .doc("tandyrs")
+        .doc("drinks")
         .get()
         .then(doc => {
           let names = [
-            "Пиде с сыром",
-            "Пиде с фаршем",
-            "Пиде с суджуком",
-            "Пиде с колбасой",
-            "Пиде ассорти",
-            "Лахмаджун с фаршем и сыром",
+            "Cola",
+            "Fante",
+            "Sprite",
+            "Fuse tea",
+            "Piko",
+            "Bonaqua",
+            "Компот",
+            "Каркаде",
+            "Лимонад",
+            "Айран",
           ];
-          let tandyrs = [];
+          let drinks = [];
           names.forEach((name, index) => {
-            tandyrs[index] = {
+            drinks[index] = {
               name,
-              costSmall: 0,
-              costStand: 1300,
-              portionSmall: "Половина",
-              portionStand: "Порция",
-              type: "Тандыр"
+              costSmall: 200,
+              costStand: 300,
+              portionSmall: "0.5л",
+              portionStand: "1л",
+              type: "Напиток"
             };
           });
 
           db.collection("dishes")
-            .doc("tandyrs")
+            .doc("drinks")
             .set({
-              tandyrs
+              drinks
             });
           console.log("Written");
         });

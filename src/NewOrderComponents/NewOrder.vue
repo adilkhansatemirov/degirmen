@@ -26,6 +26,15 @@
     <div id="tandyrs"></div>
     <v-tandyrs @addToBasket="addToBasket($event)"></v-tandyrs>
 
+    <div id="hot-drinks"></div>
+    <v-hot-drinks @addToBasket="addToBasket($event)"></v-hot-drinks>
+
+    <div id="cocktails"></div>
+    <v-cocktails @addToBasket="addToBasket($event)"></v-cocktails>
+
+    <div id="drinks"></div>
+    <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
+
     <v-basket-icon ref="basket" @openBasket="openBasket()" :basket="basket"></v-basket-icon>
     <v-basket-modal-box @closeBasket="closeBasket()" :basket="basket" v-if="basketOpen"></v-basket-modal-box>
   </div>
@@ -41,6 +50,9 @@ import GarnirsSection from "./Sections/GarnirsSection.vue";
 import ShashlyksSection from "./Sections/ShashlyksSection.vue";
 import PizzasSection from "./Sections/PizzasSection.vue";
 import TandyrsSection from "./Sections/TandyrsSection.vue";
+import HotDrinksSection from "./Sections/HotDrinksSection.vue";
+import CocktailsSection from "./Sections/CocktailsSection.vue";
+import DrinksSection from "./Sections/DrinksSection.vue";
 
 import BasketIcon from "./BasketButton.vue"; 
 import BasketModalBox from "./BasketModalBox.vue";
@@ -56,6 +68,9 @@ export default {
     "v-shashlyks": ShashlyksSection,
     "v-pizzas": PizzasSection,
     "v-tandyrs": TandyrsSection,
+    "v-hot-drinks": HotDrinksSection,
+    "v-cocktails": CocktailsSection,
+    "v-drinks": DrinksSection,
 
     "v-basket-icon": BasketIcon,
     "v-basket-modal-box": BasketModalBox
