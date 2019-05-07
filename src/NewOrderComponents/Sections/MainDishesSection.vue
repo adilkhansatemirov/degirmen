@@ -39,7 +39,7 @@
       ref="chooseGarnir"
       @chooseGarnir="chooseGarnir($event)"
       @closeGarnirs="closeGarnirs()"
-      v-if="garnirsWindowOpen"
+      v-show="garnirsWindowOpen"
     ></v-choose-garnir>
   </div>
 </template>
@@ -121,7 +121,6 @@ export default {
           const dishItem = {
             key: `mainDish${i}`,
             name: dishes[i].name,
-            // imgUrl: require("../assets/menu/soups/" + doc.data().imgUrl),
             portionSmall: dishes[i].portionSmall,
             portionStand: dishes[i].portionStand,
             costSmall: dishes[i].costSmall,

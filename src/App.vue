@@ -59,6 +59,9 @@ body {
   font-family: "Oswald", sans-serif;
   background: #ffe2dd;
 }
+input:focus{
+  outline: none;
+}
 .container {
   min-height: 100%;
   margin: 0 auto;

@@ -1,6 +1,6 @@
 <template>
   <div class="root">
-    <div class="background" @click="closeBasket($event)">
+    <div class="background" ref="basketBackground" @click="closeBasket($event)">
       <div class="modal-box">
         <div class="slide-container" ref="slideContainer">
           <div class="slide-item">
@@ -156,8 +156,8 @@ export default {
       }
     },
     closeBasket: function(event) {
-      if (event.target == document.querySelector(".background")) {
-        document.querySelector(".background").style.display = "none";
+      if (event.target == this.$refs.basketBackground) {
+        // document.querySelector(".background").style.display = "none";
         this.$emit("closeBasket");
       }
     },

@@ -8,6 +8,9 @@
     <div id="mainDishes"></div>
     <v-main-dishes @addToBasket="addToBasket($event)"></v-main-dishes>
 
+    <div id="doners"></div>
+    <v-doners @addToBasket="addToBasket($event)"></v-doners>
+
     <div id="breakfasts"></div>
     <v-breakfasts @addToBasket="addToBasket($event)"></v-breakfasts>
 
@@ -35,6 +38,9 @@
     <div id="drinks"></div>
     <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
 
+    <div id="cakes"></div>
+    <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
+
     <v-basket-icon ref="basket" @openBasket="openBasket()" :basket="basket"></v-basket-icon>
     <v-basket-modal-box @closeBasket="closeBasket()" :basket="basket" v-if="basketOpen"></v-basket-modal-box>
   </div>
@@ -44,6 +50,7 @@
 import MenuNav from "./MenuNav.vue";
 import SoupsSection from "./Sections/SoupsSection.vue";
 import MainDishesSection from "./Sections/MainDishesSection.vue";
+import DonersSection from "./Sections/DonersSection.vue";
 import BreakfastsSection from "./Sections/BreakfastsSection.vue";
 import SalatsSection from "./Sections/SalatsSection.vue";
 import GarnirsSection from "./Sections/GarnirsSection.vue";
@@ -53,8 +60,9 @@ import TandyrsSection from "./Sections/TandyrsSection.vue";
 import HotDrinksSection from "./Sections/HotDrinksSection.vue";
 import CocktailsSection from "./Sections/CocktailsSection.vue";
 import DrinksSection from "./Sections/DrinksSection.vue";
+import CakesSection from "./Sections/CakesSection.vue";
 
-import BasketIcon from "./BasketButton.vue"; 
+import BasketIcon from "./BasketButton.vue";
 import BasketModalBox from "./BasketModalBox.vue";
 
 export default {
@@ -62,6 +70,7 @@ export default {
     "v-menu-nav": MenuNav,
     "v-soups": SoupsSection,
     "v-main-dishes": MainDishesSection,
+    "v-doners": DonersSection,
     "v-breakfasts": BreakfastsSection,
     "v-salats": SalatsSection,
     "v-garnirs": GarnirsSection,
@@ -71,6 +80,7 @@ export default {
     "v-hot-drinks": HotDrinksSection,
     "v-cocktails": CocktailsSection,
     "v-drinks": DrinksSection,
+    "v-cakes": CakesSection,
 
     "v-basket-icon": BasketIcon,
     "v-basket-modal-box": BasketModalBox

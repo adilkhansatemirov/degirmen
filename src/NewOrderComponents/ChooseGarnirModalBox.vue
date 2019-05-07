@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="background" @click="closeGarnirs($event)">
+    <div class="background" ref="garnirsBackground" @click="closeGarnirs($event)">
       <div class="modal-box">
         <ul>
           <li v-for="garnir in garnirs" :key="garnir.key" @click="chooseGarnir(garnir)">
@@ -22,8 +22,8 @@ export default {
   },
   methods: {
     closeGarnirs: function(event) {
-      if (event.target == document.querySelector(".background")) {
-        document.querySelector(".background").style.display = "none";
+      if (event.target == this.$refs.garnirsBackground) {
+        // document.querySelector(".background").style.display = "none";
         this.$emit("closeGarnirs");
       }
     },
