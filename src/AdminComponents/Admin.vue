@@ -53,27 +53,27 @@ export default {
 
           //continue with other dishes
           db.collection("dishes")
-            .doc("cakes")
+            .doc("iceCreams")
             .get()
             .then(doc => {
-              let cakes = doc.data().cakes;
-              for (let i = 0; i < cakes.length; i++) {
+              let iceCreams = doc.data().iceCreams;
+              for (let i = 0; i < iceCreams.length; i++) {
                 let dish = {
-                  costSmall: cakes[i].costSmall,
-                  costStand: cakes[i].costStand,
+                  costSmall: iceCreams[i].costSmall,
+                  costStand: iceCreams[i].costStand,
                   counterMoney: 0,
                   counterSmall: 0,
                   counterStand: 0,
-                  name: cakes[i].name,
+                  name: iceCreams[i].name,
                   type: "Донеры"
                 };
                 let dish1 = {
-                  costSmall: cakes[i].costSmall,
-                  costStand: cakes[i].costStand,
+                  costSmall: iceCreams[i].costSmall,
+                  costStand: iceCreams[i].costStand,
                   counterMoney: 0,
                   counterSmall: 0,
                   counterStand: 0,
-                  name: cakes[i].name + " (с сыром)",
+                  name: iceCreams[i].name + " (с сыром)",
                   type: "Донеры"
                 };
                 dishes1.push(dish);
@@ -123,56 +123,38 @@ export default {
     },
     fillDishes: function() {
       db.collection("dishes")
-        .doc("cakes")
+        .doc("iceCreams")
         .get()
         .then(doc => {
-          let cakes = doc.data().cakes;
           let names = [
-            "Серце твое",
-            "Трио",
-            "Биттер",
-            "Пончик",
-            "Траличе",
-            "Пирамида",
-            "Фисташковый спанч",
-            "Чизкейк",
-            "Профитроли",
-            "Тирамису",
-            "Суфле фруктовое",
-            "Темный лес",
-            "Блондинка",
-            "Сникерс",
-            "Макаронс"
+            "Сливочное",
+            "Клубничное",
+            "Вишневое",
+            "Шоколадное",
+            "Киви",
+            "Банановое",
+            "Фисташковое",
+            "Сливочное мараш",
           ];
 
-          console.log(doc.data());
-
-          // let cakes = [];
-          names.forEach((name, index) => {
-            console.log(cakes);
-
-            cakes.push({
+          let iceCreams = [];
+          names.forEach(name => {
+            iceCreams.push({
               name,
-              costSmall: 550,
-              costStand: 800,
-              portionSmall: "200г",
-              portionStand: "500г",
-              type: "Пироженое"
+              costSmall: 0,
+              costStand: 200,
+              portionSmall: "Половина",
+              portionStand: "Порция",
+              type: "Мороженое"
             });
-            // cakes[index] = {
-            //   name,
-            //   costSmall: 550,
-            //   costStand: 800,
-            //   portionSmall: "200г",
-            //   portionStand: "500г",
-            //   type: "Пироженое"
-            // };
           });
+          console.log(iceCreams);
+          
 
           db.collection("dishes")
-            .doc("cakes")
+            .doc("iceCreams")
             .set({
-              cakes
+              iceCreams
             })
             .then(() => {
               console.log("Written");

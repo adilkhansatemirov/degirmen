@@ -24,7 +24,7 @@
               <a class="portion__option" @click="openGarnirs(dish)">
                 <div class="portion__size-price">
                   <div class="portion__size">{{dish.portionStand}}</div>
-                  <div class="portion__price">{{dish.costStand}}₸</div>
+                  <div class="portion__price">{{dish.costStand}}₸ +</div>
                 </div>
                 <div class="basket-icon">
                   <font-awesome-icon icon="shopping-basket"/>

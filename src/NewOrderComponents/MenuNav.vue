@@ -39,10 +39,19 @@
             <a href="#tandyrs">Тандыр</a>
           </li>
           <li>
-            <a href="#sweets">Сладости</a>
+            <a href="#cakes">Пироженые</a>
+          </li>
+          <li>
+            <a href="#baklavas">Баклава</a>
+          </li>
+          <li>
+            <a href="#iceCreams">Мороженое</a>
           </li>
           <li>
             <a href="#hotDrinks">Горячие напитки</a>
+          </li>
+          <li>
+            <a href="#cocktails">Коктейли</a>
           </li>
           <li>
             <a href="#drinks">Напитки</a>
@@ -54,24 +63,27 @@
         <a class="btn-close" @click="closeSlideMenu()">
           <font-awesome-icon icon="times"/>
         </a>
-        <a href="#soups" @click="closeSlideMenu()" class="link">Супы</a>
-        <a href="#mainDishes" @click="closeSlideMenu()" class="link">
+        <a href="#soups" @click="jumpTo('#soups')" class="link">Супы</a>
+        <a href="#mainDishes" @click="jumpTo('#mainDishes')" class="link">
           Горячие
           <br>блюда
         </a>
-        <a href="#doners" @click="closeSlideMenu()" class="link">Донер</a>
-        <a href="#pizzas" @click="closeSlideMenu()" class="link">Пицца</a>
-        <a href="#garnirs" @click="closeSlideMenu()" class="link">Гарниры</a>
-        <a href="#salats" @click="closeSlideMenu()" class="link">Салаты</a>
-        <a href="#shashlyks" @click="closeSlideMenu()" class="link">Шашлыки</a>
-        <a href="#breakfasts" @click="closeSlideMenu()" class="link">Завтраки</a>
-        <a href="#tandyrs" @click="closeSlideMenu()" class="link">Тандыр</a>
-        <a href="#sweets" @click="closeSlideMenu()" class="link">Сладости</a>
-        <a href="#hotDrinks" @click="closeSlideMenu()" class="link">
+        <a href="#doners" @click="jumpTo('#doners')" class="link">Донер</a>
+        <a href="#pizzas" @click="jumpTo('#pizzas')" class="link">Пицца</a>
+        <a href="#garnirs" @click="jumpTo('#garnirs')" class="link">Гарниры</a>
+        <a href="#salats" @click="jumpTo('#salats')" class="link">Салаты</a>
+        <a href="#shashlyks" @click="jumpTo('#shashlyks')" class="link">Шашлыки</a>
+        <a href="#breakfasts" @click="jumpTo('#breakfasts')" class="link">Завтраки</a>
+        <a href="#tandyrs" @click="jumpTo('#tandyrs')" class="link">Тандыр</a>
+        <a href="#cakes" @click="jumpTo('#cakes')" class="link">Пироженые</a>
+        <a href="#baklavas" @click="jumpTo('#baklavas')" class="link">Баклава</a>
+        <a href="#iceCreams" @click="jumpTo('#iceCreams')" class="link">Мороженое</a>
+        <a href="#hotDrinks" @click="jumpTo('#hotDrinks')" class="link">
           Горячие
           <br>напитки
         </a>
-        <a href="#drinks" @click="closeSlideMenu()" class="link">Напитки</a>
+        <a href="#cocktails" @click="jumpTo('#cocktails')" class="link">Коктейли</a>
+        <a href="#drinks" @click="jumpTo('#drinks')" class="link">Напитки</a>
       </div>
     </nav>
   </div>
@@ -79,6 +91,7 @@
 
 <script>
 import firebase from "firebase/app";
+import jump from "jump.js";
 
 export default {
   data() {
@@ -97,16 +110,11 @@ export default {
       this.$refs.slideMenu.style.width = "0px";
       this.menuClosed = true;
     },
-    signOut: function() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$router.go("/login");
-        });
-    },
-    loginAsAdmin: function(){
-      this.$router.push("/admin");
+    jumpTo: function(target) {
+      // jump(target, {
+      //   duration: 300
+      // });
+      this.closeSlideMenu();
     }
   }
 };

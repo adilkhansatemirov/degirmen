@@ -11,25 +11,34 @@
     <div id="doners"></div>
     <v-doners @addToBasket="addToBasket($event)"></v-doners>
 
-    <div id="breakfasts"></div>
-    <v-breakfasts @addToBasket="addToBasket($event)"></v-breakfasts>
-
-    <div id="salats"></div>
-    <v-salats @addToBasket="addToBasket($event)"></v-salats>
+    <div id="pizzas"></div>
+    <v-pizzas @addToBasket="addToBasket($event)"></v-pizzas>
 
     <div id="garnirs"></div>
     <v-garnirs @addToBasket="addToBasket($event)"></v-garnirs>
 
+    <div id="salats"></div>
+    <v-salats @addToBasket="addToBasket($event)"></v-salats>
+
     <div id="shashlyks"></div>
     <v-shashlyks @addToBasket="addToBasket($event)"></v-shashlyks>
 
-    <div id="pizzas"></div>
-    <v-pizzas @addToBasket="addToBasket($event)"></v-pizzas>
+    <div id="breakfasts"></div>
+    <v-breakfasts @addToBasket="addToBasket($event)"></v-breakfasts>
 
     <div id="tandyrs"></div>
     <v-tandyrs @addToBasket="addToBasket($event)"></v-tandyrs>
 
-    <div id="hot-drinks"></div>
+    <div id="cakes"></div>
+    <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
+
+    <div id="baklavas"></div>
+    <v-baklavas @addToBasket="addToBasket($event)"></v-baklavas>
+
+    <div id="iceCreams"></div>
+    <v-ice-creams @addToBasket="addToBasket($event)"></v-ice-creams>
+
+    <div id="hotDrinks"></div>
     <v-hot-drinks @addToBasket="addToBasket($event)"></v-hot-drinks>
 
     <div id="cocktails"></div>
@@ -37,9 +46,6 @@
 
     <div id="drinks"></div>
     <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
-
-    <div id="cakes"></div>
-    <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
 
     <v-basket-icon ref="basket" @openBasket="openBasket()" :basket="basket"></v-basket-icon>
     <v-basket-modal-box @closeBasket="closeBasket()" :basket="basket" v-if="basketOpen"></v-basket-modal-box>
@@ -61,6 +67,8 @@ import HotDrinksSection from "./Sections/HotDrinksSection.vue";
 import CocktailsSection from "./Sections/CocktailsSection.vue";
 import DrinksSection from "./Sections/DrinksSection.vue";
 import CakesSection from "./Sections/CakesSection.vue";
+import BaklavasSection from "./Sections/BaklavasSection.vue";
+import IceCreamsSection from "./Sections/IceCreamsSection.vue";
 
 import BasketIcon from "./BasketButton.vue";
 import BasketModalBox from "./BasketModalBox.vue";
@@ -81,6 +89,8 @@ export default {
     "v-cocktails": CocktailsSection,
     "v-drinks": DrinksSection,
     "v-cakes": CakesSection,
+    "v-baklavas": BaklavasSection,
+    "v-ice-creams": IceCreamsSection,
 
     "v-basket-icon": BasketIcon,
     "v-basket-modal-box": BasketModalBox

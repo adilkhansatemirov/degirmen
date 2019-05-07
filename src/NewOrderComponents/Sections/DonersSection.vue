@@ -113,7 +113,7 @@ export default {
         donerToSend.name += ` (${commentInput})`;
       }
       
-      //empty everything
+      //empty everything`
       doner.toppings = [];
       this.$refs["comment"+doner.key][0].value = "";
       this.$emit("addToBasket", donerToSend);
