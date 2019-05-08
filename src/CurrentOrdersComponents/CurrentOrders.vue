@@ -31,39 +31,14 @@
             <p class="order-time">{{getTime(order)}}</p>
           </div>
           <div class="order-body">
-            <div class="order-info" v-if="order.type == 'Доставка'">
-              <p>Адрес: {{order.address}}</p>
-            </div>
-            <div class="order-info" v-else>
-              <div v-if="order.takeaway == true">
-                <p>С собой</p>
-              </div>
-              <div v-else>
-                <p>Офицант: {{order.waiterName}}</p>
-                <p>Столик: {{order.table}}</p>
-              </div>
-            </div>
-            <ul>
-              <li class="dish-item" v-for="dish in order.dishes" :key="dish.key">
-                <p class="dish-name">{{dish.dish.name}}</p>
-                <p class="dish-cost" v-if="isHalf(dish.dish)">{{dish.dish.costSmall}}</p>
-                <p class="dish-cost" v-else>{{dish.dish.costStand}}</p>
-                <p class="dish-amount">{{dish.amount}}</p>
-                <p class="dish-total">{{dish.amount * dish.dish.cost}}</p>
-              </li>
-              <p class="order-total">Итог: {{order.total}}</p>
+            <v-order-info :order="order"></v-order-info>
 
-              <div v-if="order.type == 'Кафе'">
-                <div v-if="order.discount != 0">
-                  <p class="order-total">Скидка: -{{order.discount}}%</p>
-                  <p class="order-total">С учетом скидки: {{countDiscount(order)}}</p>
-                </div>
-                <p class="order-total" v-if="!order.takeaway">Обслуживание: {{service(order)}}</p>
-              </div>
-              <p v-else class="order-total">Доставка: 300</p>
+            <li v-for="dish in order.dishes" :key="dish.key">
+              <v-dish-item :dish="dish"></v-dish-item>
+            </li>
 
-              <p class="order-total">К оплате: {{toPay(order)}}</p>
-            </ul>
+            <v-order-count-money :order="order"></v-order-count-money>
+
             <div class="button-group">
               <a class="button" @click="updateOrder(order)">Изменить</a>
               <a class="button" @click="cancelOrder(order)">Отменить</a>
@@ -83,8 +58,16 @@
 
 <script>
 import db from "../firebase/firebase-init";
+import DishItem from "./DishItem.vue";
+import OrderInfo from "./OrderInfo.vue";
+import OrderCountMoney from "./OrderCountMoney.vue";
 
 export default {
+  components: {
+    "v-order-info": OrderInfo,
+    "v-dish-item": DishItem,
+    "v-order-count-money": OrderCountMoney
+  },
   data() {
     return {
       orders: [],
@@ -108,12 +91,6 @@ export default {
     };
   },
   methods: {
-    isHalf: function(dish) {
-      if (dish.cost == dish.costSmall) {
-        return true;
-      }
-      return false;
-    },
     getTime: function(order) {
       let time = order.time.toString().split(" ")[4];
       time = time.substring(0, time.lastIndexOf(":"));
@@ -121,27 +98,6 @@ export default {
     },
     getMonth: function(order) {
       return this.months[order.time.getMonth()];
-    },
-    countDiscount: function(order) {
-      return Math.round(order.total - (order.total * order.discount) / 100);
-    },
-    service: function(order) {
-      if (order.takeaway) {
-        return 0;
-      } else if (order.discount != 0) {
-        return Math.round((this.countDiscount(order) * 5) / 100);
-      }
-      return Math.round((order.total * 5) / 100);
-    },
-    toPay: function(order) {
-      if (order.type == "Кафе") {
-        if (order.discount != 0) {
-          return this.countDiscount(order) + this.service(order);
-        }
-        return order.total + this.service(order);
-      } else {
-        return order.total + 300;
-      }
     },
     updateOrder: function(order) {
       this.$router.push(`/update/${order.id}`);
@@ -379,24 +335,6 @@ export default {
 }
 .order-type {
   font-size: 1.5rem;
-}
-.order-total {
-  text-align: right;
-}
-.dish-item {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(211, 43, 43, 0.185);
-  padding-bottom: 0.1rem;
-}
-.dish-name {
-  flex: 3;
-}
-.dish-cost,
-.dish-amount,
-.dish-total {
-  flex: 1;
-  text-align: right;
 }
 .button-group {
   margin-top: 0.5rem;
