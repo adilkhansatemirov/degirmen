@@ -41,7 +41,7 @@
 
             <v-order-count-money :order="order"></v-order-count-money>
 
-            <div class="button-group">
+            <div class="button-group" v-if="orderOfThisWaiter(order)">
               <a class="button" @click="updateOrder(order)">Изменить</a>
               <a class="button" @click="cancelOrder(order)">Отменить</a>
               <div v-if="adminMode">
@@ -90,10 +90,10 @@ export default {
         "November",
         "December"
       ],
-      saveOrderShow: false,
       passwordInput: "",
       passwordCorrect: "hello",
-      adminMode: false
+      adminMode: false,
+      waiterName: null
     };
   },
   methods: {
@@ -115,6 +115,10 @@ export default {
         .then(() => {
           console.log("Document successfully deleted!");
         });
+    },
+    orderOfThisWaiter: function(order){
+      if(this.adminMode) return true;
+      return order.waiterName === this.waiterName;
     },
     archiveOrder: function(order) {
       this.passwordInput = "";
@@ -304,6 +308,9 @@ export default {
       .get()
       .then(doc => {
         this.adminMode = doc.data().status !== "Офицант";
+        if (!this.adminMode) {
+          this.waiterName = doc.data().name;
+        }
       });
   }
 };
