@@ -63,8 +63,17 @@
             <form @submit.prevent="saveOrder()" class="cafe-form">
               <div v-if="!takeaway">
                 <div class="waiter-name">
-                  <label for="waiter-name">Имя офицанта</label>
-                  <select v-model="waiterName" name="waiterName" id="waiterName" required>
+                  <label for="waiter-name">
+                    Имя офицанта
+                    <span v-if="!adminMode">: {{waiterName}}</span>
+                  </label>
+                  <select
+                    v-if="adminMode"
+                    v-model="waiterName"
+                    name="waiterName"
+                    id="waiterName"
+                    required
+                  >
                     <option v-for="waiterName in waitersNames" :key="waiterName.key">{{waiterName}}</option>
                   </select>
                 </div>
@@ -110,6 +119,7 @@
 
 <script>
 import db from "../firebase/firebase-init";
+import firebase from "firebase/app";
 const axios = require("axios");
 
 export default {
@@ -117,20 +127,16 @@ export default {
     basket: {
       type: Array
     }
-    // docToUpdate: {
-    //   type: String,
-    //   default: "not assigned"
-    // }
   },
   data() {
     return {
       slideContainer: null,
       width: null,
       position: null,
-      waiterMoney: 0,
       takeaway: false,
       waitersNames: [],
-      waiterName: null
+      waiterName: null,
+      adminMode: false
     };
   },
   methods: {
@@ -209,7 +215,7 @@ export default {
             console.log("written");
           });
       }
-      this.postRequest(orderToPost);
+      // this.postRequest(orderToPost);
       this.$router.push("/orders");
     },
     postRequest: function(order) {
@@ -269,17 +275,30 @@ export default {
           }
         });
     }
-
-    //getting list of waiters
-
+  },
+  created() {
+    //setting adminMode
+    let { uid } = firebase.auth().currentUser;
     db.collection("users")
+      .doc(uid)
       .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          if (doc.data().status === "Офицант") {
-            this.waitersNames.push(doc.data().name);
-          }
-        });
+      .then(doc => {
+        this.adminMode = doc.data().status !== "Офицант";
+
+        if (!this.adminMode) {
+          this.waiterName = doc.data().name;
+        } else {
+          //getting list of waiters
+          db.collection("users")
+            .get()
+            .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                if (doc.data().status === "Офицант") {
+                  this.waitersNames.push(doc.data().name);
+                }
+              });
+            });
+        }
       });
   }
 };

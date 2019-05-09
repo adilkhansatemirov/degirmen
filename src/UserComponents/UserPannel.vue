@@ -50,7 +50,6 @@ export default {
       .doc(this.userId)
       .get()
       .then(doc => {
-        console.log(doc.data());
         this.userStatus = doc.data().status;
         this.userName = doc.data().name;
       });

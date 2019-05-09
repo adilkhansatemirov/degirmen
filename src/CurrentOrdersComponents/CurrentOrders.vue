@@ -3,7 +3,7 @@
     <div class="container">
       <h2 class="title">Заказы</h2>
       <!-- TEXTFIELD TO UNLOCK ADMIN PRIVILIGES -->
-      <div class="unlock-save-order-holder">
+      <div class="unlock-save-order-holder" v-if="adminMode">
         <p class="unlock-save-order-message">Введите пароль чтобы сохранить заказ или закрыть кассу</p>
         <input
           class="unlock-save-order-input"
@@ -14,15 +14,17 @@
         >
       </div>
 
-      <a
-        class="close-cashier-button"
-        @click="clearHistory()"
-        v-if="orders.length==0 && passwordCorrect == passwordInput"
-      >Закрыть кассу на сегодня</a>
-      <a
-        class="close-cashier-button disabled"
-        v-if="orders.length==0 && passwordCorrect != passwordInput"
-      >Закрыть кассу на сегодня</a>
+      <div v-if="adminMode">
+        <a
+          class="close-cashier-button"
+          @click="clearHistory()"
+          v-if="orders.length==0 && passwordCorrect == passwordInput"
+        >Закрыть кассу на сегодня</a>
+        <a
+          class="close-cashier-button disabled"
+          v-if="orders.length==0 && passwordCorrect != passwordInput"
+        >Закрыть кассу на сегодня</a>
+      </div>
 
       <ul class="orders-list">
         <li class="order-item" v-for="order in orders" :key="order.id">
@@ -42,12 +44,14 @@
             <div class="button-group">
               <a class="button" @click="updateOrder(order)">Изменить</a>
               <a class="button" @click="cancelOrder(order)">Отменить</a>
-              <a
-                class="button"
-                v-if="passwordCorrect == passwordInput"
-                @click="archiveOrder(order)"
-              >Сохранить</a>
-              <a class="button disabled" v-if="passwordCorrect != passwordInput">Сохранить</a>
+              <div v-if="adminMode">
+                <a
+                  class="button"
+                  v-if="passwordCorrect == passwordInput"
+                  @click="archiveOrder(order)"
+                >Сохранить</a>
+                <a class="button disabled" v-if="passwordCorrect != passwordInput">Сохранить</a>
+              </div>
             </div>
           </div>
         </li>
@@ -58,6 +62,7 @@
 
 <script>
 import db from "../firebase/firebase-init";
+import firebase from "firebase/app";
 import DishItem from "./DishItem.vue";
 import OrderInfo from "./OrderInfo.vue";
 import OrderCountMoney from "./OrderCountMoney.vue";
@@ -87,7 +92,8 @@ export default {
       ],
       saveOrderShow: false,
       passwordInput: "",
-      passwordCorrect: "hello"
+      passwordCorrect: "hello",
+      adminMode: false
     };
   },
   methods: {
@@ -106,7 +112,7 @@ export default {
       db.collection("currentOrders")
         .doc(order.id)
         .delete()
-        .then(function() {
+        .then(() => {
           console.log("Document successfully deleted!");
         });
     },
@@ -255,8 +261,6 @@ export default {
         });
     },
     allowToSave() {
-      console.log(this.$refs);
-
       return this.$refs.passwordToSaveInput.value == this.passwordToSaveOrder;
     }
   },
@@ -267,7 +271,6 @@ export default {
         var source = querySnapshot.metadata.fromCache
           ? "local cache"
           : "server";
-        console.log("Data came from " + source);
 
         this.orders = [];
         querySnapshot.forEach(doc => {
@@ -293,6 +296,14 @@ export default {
 
           this.orders.push(order);
         });
+      });
+    //setting adminMode
+    let { uid } = firebase.auth().currentUser;
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then(doc => {
+        this.adminMode = doc.data().status !== "Офицант";
       });
   }
 };
