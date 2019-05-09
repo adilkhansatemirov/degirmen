@@ -110,16 +110,17 @@
 
 <script>
 import db from "../firebase/firebase-init";
+const axios = require("axios");
 
 export default {
   props: {
     basket: {
       type: Array
-    },
-    docToUpdate: {
-      type: String,
-      default: "not assigned"
     }
+    // docToUpdate: {
+    //   type: String,
+    //   default: "not assigned"
+    // }
   },
   data() {
     return {
@@ -128,7 +129,7 @@ export default {
       position: null,
       waiterMoney: 0,
       takeaway: false,
-      waitersNames: ["Арман", "Бекзат"],
+      waitersNames: [],
       waiterName: null
     };
   },
@@ -148,8 +149,6 @@ export default {
     deleteDish: function(dish) {
       for (let i = 0; i < this.basket.length; i++) {
         if (dish.dish.name == this.basket[i].dish.name) {
-          console.log(dish.dish.name);
-          console.log(this.basket[i].dish.name);
           this.basket.splice(i, 1);
           break;
         }
@@ -157,7 +156,6 @@ export default {
     },
     closeBasket: function(event) {
       if (event.target == this.$refs.basketBackground) {
-        // document.querySelector(".background").style.display = "none";
         this.$emit("closeBasket");
       }
     },
@@ -194,9 +192,8 @@ export default {
         orderToPost.discount = this.$refs.discount.value;
         orderToPost.type = "Кафе";
       }
-      console.log(orderToPost);
 
-      if (this.docToUpdate == "not assigned") {
+      if (Object.keys(this.$route.params).length === 0) {
         //if new order
         db.collection("currentOrders")
           .add(orderToPost)
@@ -206,14 +203,34 @@ export default {
       } else {
         //if update order
         db.collection("currentOrders")
-          .doc(this.docToUpdate)
+          .doc(this.$route.params.orderId)
           .set(orderToPost)
           .then(docRef => {
             console.log("written");
           });
-        console.log(this.basket);
       }
+      this.postRequest(orderToPost);
       this.$router.push("/orders");
+    },
+    postRequest: function(order) {
+      const data = {
+        ip: "1.1.1.1",
+        text: this.position,
+        order
+      };
+      const config = {
+        responseType: "text"
+      };
+      axios
+        // .post("/test/index.php", data, config)
+        .post("/print/example/interface/ethernet.php", data, config)
+        .then(function(response) {
+          console.log(response);
+          console.log("Responce was handled.");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     countTotal: function() {
       let total = 0;
@@ -234,9 +251,9 @@ export default {
     this.slideContainer.style.transform = `translateX(${-this.width}px)`;
 
     //if entered in update order
-    if (this.docToUpdate != "not assigned") {
+    if (Object.keys(this.$route.params).length !== 0) {
       db.collection("currentOrders")
-        .doc(this.docToUpdate)
+        .doc(this.$route.params.orderId)
         .get()
         .then(doc => {
           if (doc.data().type == "Доставка") {
@@ -252,14 +269,18 @@ export default {
           }
         });
     }
-    // db.collection("history")
-    //   .doc("Today")
-    //   .get()
-    //   .then(doc => {
-    //     for (let i = 0; i < doc.data().waitersMoney.length; i++) {
-    //       this.waitersNames.push(doc.data().waitersMoney[i].waiterName);
-    //     }
-    //   });
+
+    //getting list of waiters
+
+    db.collection("users")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          if (doc.data().status === "Офицант") {
+            this.waitersNames.push(doc.data().name);
+          }
+        });
+      });
   }
 };
 </script>

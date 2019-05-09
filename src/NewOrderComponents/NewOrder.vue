@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import db from "../firebase/firebase-init";
+
 import MenuNav from "./MenuNav.vue";
 import SoupsSection from "./Sections/SoupsSection.vue";
 import MainDishesSection from "./Sections/MainDishesSection.vue";
@@ -72,6 +74,8 @@ import IceCreamsSection from "./Sections/IceCreamsSection.vue";
 
 import BasketIcon from "./BasketButton.vue";
 import BasketModalBox from "./BasketModalBox.vue";
+
+import EventBus from "../eventBus";
 
 export default {
   components: {
@@ -126,6 +130,25 @@ export default {
     closeBasket: function() {
       this.basketOpen = false;
     }
+  },
+  created() {
+    //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
+    if (Object.keys(this.$route.params).length !== 0) {
+      db.collection("currentOrders")
+        .doc(this.$route.params.orderId)
+        .get()
+        .then(doc => {
+          this.basket = doc.data().dishes;
+        });
+    }
+    EventBus.$on("openMenu", () => {
+      if (Object.keys(this.$route.params).length !== 0) {
+        this.basket = [];
+      }
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off("openMenu");
   }
 };
 </script>

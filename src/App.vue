@@ -13,7 +13,7 @@ export default {
   name: "App",
   components: {
     "v-navigation": Navigation
-  },
+  }
 };
 </script>
 
@@ -59,7 +59,12 @@ body {
   font-family: "Oswald", sans-serif;
   background: #ffe2dd;
 }
-input:focus{
+button,
+input {
+  font-family: "Oswald", sans-serif;
+}
+input:focus,
+button:focus {
   outline: none;
 }
 .container {

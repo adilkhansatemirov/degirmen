@@ -11,12 +11,12 @@
           <font-awesome-icon class="user-icon" icon="user"/>
         </div>
       </span>
-      <router-link to="/" class="li">
+      <button @click="pushToMenu()" class="li">
         Меню
         <span>
           <font-awesome-icon icon="utensils"/>
         </span>
-      </router-link>
+      </button>
       <router-link to="/orders" class="li">
         Заказы
         <span>
@@ -62,6 +62,13 @@ export default {
     },
     hideNavigation: function() {
       this.loggedIn = false;
+    },
+    // in case of navigating from
+    // 'update order' route to 'new order' route
+    // the basket stays filled, so we clear it by 'BUS'
+    pushToMenu: function() {
+      EventBus.$emit("openMenu");
+      this.$router.push("/");
     }
   },
   mounted() {
@@ -80,6 +87,9 @@ ul {
   position: fixed;
   left: 0;
   bottom: 0;
+}
+button.li {
+  font-size: 1rem;
 }
 .li {
   padding: 0.75rem;
