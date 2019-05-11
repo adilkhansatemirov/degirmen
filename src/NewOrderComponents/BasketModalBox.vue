@@ -52,6 +52,25 @@
                 <p class="dish-total">{{dish.amount * dish.dish.cost}}</p>
               </li>
             </ul>
+            <div v-if="!newOrder()">
+              <h3>Дозаказ</h3>
+              <ul class="dish-list">
+                <li class="dish-item" v-for="dish in secondBasket" :key="dish.key">
+                  <p class="dish-name">{{dish.dish.name}}</p>
+                  <p class="dish-cost">{{dish.dish.cost}}</p>
+                  <p class="dish-amount">
+                    <span @click="amountChange(dish, -1)">
+                      <font-awesome-icon icon="minus"/>
+                    </span>
+                    {{dish.amount}}
+                    <span @click="amountChange(dish, 1)">
+                      <font-awesome-icon icon="plus"/>
+                    </span>
+                  </p>
+                  <p class="dish-total">{{dish.amount * dish.dish.cost}}</p>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div class="slide-item">
@@ -126,6 +145,9 @@ export default {
   props: {
     basket: {
       type: Array
+    },
+    secondBasket: {
+      type: Array
     }
   },
   data() {
@@ -146,16 +168,35 @@ export default {
       }
       return false;
     },
+    newOrder: function() {
+      return Object.keys(this.$route.params).length === 0;
+    },
     amountChange: function(dish, number) {
-      dish.amount += number;
-      if (dish.amount == 0) {
-        this.deleteDish(dish);
+      if (number === 1) {
+        this.$emit("addToBasket", dish.dish);
+      } else {
+        for (let i = 0; i < this.basket.length; i++) {
+          if (dish.dish.name == this.basket[i].dish.name) {
+            this.basket[i].amount--;
+            if (this.basket[i].amount == 0) {
+              this.deleteDish(dish, this.basket);
+            }
+          }
+        }
+        for (let i = 0; i < this.secondBasket.length; i++) {
+          if (dish.dish.name == this.secondBasket[i].dish.name) {
+            this.secondBasket[i].amount--;
+            if (this.secondBasket[i].amount == 0) {
+              this.deleteDish(dish, this.secondBasket);
+            }
+          }
+        }
       }
     },
-    deleteDish: function(dish) {
-      for (let i = 0; i < this.basket.length; i++) {
-        if (dish.dish.name == this.basket[i].dish.name) {
-          this.basket.splice(i, 1);
+    deleteDish: function(dish, basket) {
+      for (let i = 0; i < basket.length; i++) {
+        if (dish.dish.name == basket[i].dish.name) {
+          basket.splice(i, 1);
           break;
         }
       }
@@ -184,7 +225,8 @@ export default {
       const orderToPost = {
         time: new Date(),
         total: this.countTotal(),
-        dishes: this.basket
+        dishes: this.basket,
+        additionalDishes: this.secondBasket
       };
       if (this.position == "delivery") {
         orderToPost.address = this.$refs.address.value;
@@ -199,7 +241,7 @@ export default {
         orderToPost.type = "Кафе";
       }
 
-      if (Object.keys(this.$route.params).length === 0) {
+      if (this.newOrder()) {
         //if new order
         db.collection("currentOrders")
           .add(orderToPost)
@@ -257,7 +299,7 @@ export default {
     this.slideContainer.style.transform = `translateX(${-this.width}px)`;
 
     //if entered in update order
-    if (Object.keys(this.$route.params).length !== 0) {
+    if (!this.newOrder()) {
       db.collection("currentOrders")
         .doc(this.$route.params.orderId)
         .get()

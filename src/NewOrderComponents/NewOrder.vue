@@ -48,7 +48,13 @@
     <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
 
     <v-basket-icon ref="basket" @openBasket="openBasket()" :basket="basket"></v-basket-icon>
-    <v-basket-modal-box @closeBasket="closeBasket()" :basket="basket" v-if="basketOpen"></v-basket-modal-box>
+    <v-basket-modal-box
+      @closeBasket="closeBasket()"
+      @addToBasket="addToBasket($event)"
+      :basket="basket"
+      :secondBasket="secondBasket"
+      v-if="basketOpen"
+    ></v-basket-modal-box>
   </div>
 </template>
 
@@ -102,13 +108,14 @@ export default {
   data() {
     return {
       basket: [],
+      secondBasket: [],
       basketOpen: false
     };
   },
   methods: {
-    addToBasket: function(soupToGet) {
+    addToBasket: function(dish) {
       const orderedDish = {
-        dish: soupToGet,
+        dish,
         amount: 1
       };
       let putInBasket = true;
@@ -122,18 +129,44 @@ export default {
       if (putInBasket) {
         this.basket.push(orderedDish);
       }
+      if (Object.keys(this.$route.params).length !== 0) {
+        this.addToSecondBasket(dish);
+      }
+      console.log(this.secondBasket);
       this.$refs.basket.spinBasket();
+    },
+    addToSecondBasket: function(dish) {
+      const orderedDish = {
+        dish,
+        amount: 1
+      };
+      let putInBasket = true;
+      for (let i = 0; i < this.secondBasket.length; i++) {
+        if (this.secondBasket[i].dish.name === orderedDish.dish.name) {
+          this.secondBasket[i].amount++;
+          putInBasket = false;
+          break;
+        }
+      }
+      if (putInBasket) {
+        this.secondBasket.push(orderedDish);
+      }
+      console.log("put from modal");
+      
     },
     openBasket() {
       this.basketOpen = true;
     },
     closeBasket: function() {
       this.basketOpen = false;
+    },
+    newOrder: function() {
+      return Object.keys(this.$route.params).length === 0;
     }
   },
   created() {
     //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
-    if (Object.keys(this.$route.params).length !== 0) {
+    if (!this.newOrder()) {
       db.collection("currentOrders")
         .doc(this.$route.params.orderId)
         .get()
@@ -142,8 +175,9 @@ export default {
         });
     }
     EventBus.$on("openMenu", () => {
-      if (Object.keys(this.$route.params).length !== 0) {
+      if (!this.newOrder()) {
         this.basket = [];
+        this.secondBasket = [];
       }
     });
   },

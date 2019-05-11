@@ -116,8 +116,11 @@ export default {
           console.log("Document successfully deleted!");
         });
     },
-    orderOfThisWaiter: function(order){
-      if(this.adminMode) return true;
+    orderOfThisWaiter: function(order) {
+      if (this.adminMode) return true;
+      if(!order.hasOwnProperty("waiterName")){
+        return false;
+      }
       return order.waiterName === this.waiterName;
     },
     archiveOrder: function(order) {
