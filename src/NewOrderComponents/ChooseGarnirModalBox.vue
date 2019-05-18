@@ -4,7 +4,8 @@
       <div class="modal-box">
         <ul>
           <li v-for="garnir in garnirs" :key="garnir.key" @click="chooseGarnir(garnir)">
-            {{returnName(garnir)}}
+            <p>{{returnName(garnir)}}</p>
+            <p class="garnir-cost">{{garnir.costStand}}₸</p>
           </li>
         </ul>
       </div>
@@ -92,5 +93,8 @@ li{
   text-align: center;
   background: #ffd2d2;
   cursor: pointer;
+}
+.garnir-cost{
+  font-size: 0.9rem;
 }
 </style>

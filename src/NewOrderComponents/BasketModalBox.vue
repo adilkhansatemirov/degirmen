@@ -226,7 +226,8 @@ export default {
         time: new Date(),
         total: this.countTotal(),
         dishes: this.basket,
-        additionalDishes: this.secondBasket
+        additionalDishes: this.secondBasket,
+        destination: "KITCHEN"
       };
       if (this.position == "delivery") {
         orderToPost.address = this.$refs.address.value;
@@ -257,13 +258,11 @@ export default {
             console.log("written");
           });
       }
-      // this.postRequest(orderToPost);
+      this.printRequest(orderToPost);
       this.$router.push("/orders");
     },
-    postRequest: function(order) {
+    printRequest: function(order) {
       const data = {
-        ip: "1.1.1.1",
-        text: this.position,
         order
       };
       const config = {

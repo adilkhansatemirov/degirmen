@@ -62,6 +62,7 @@ import { faStoreAlt } from "@fortawesome/free-solid-svg-icons";
 import { faCarSide } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 import { faShoppingBasket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -80,6 +81,7 @@ library.add(faStoreAlt);
 library.add(faCarSide);
 library.add(faArrowRight);
 library.add(faArrowLeft);
+library.add(faPrint);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false;

@@ -132,7 +132,6 @@ export default {
       if (Object.keys(this.$route.params).length !== 0) {
         this.addToSecondBasket(dish);
       }
-      console.log(this.secondBasket);
       this.$refs.basket.spinBasket();
     },
     addToSecondBasket: function(dish) {
@@ -151,8 +150,6 @@ export default {
       if (putInBasket) {
         this.secondBasket.push(orderedDish);
       }
-      console.log("put from modal");
-      
     },
     openBasket() {
       this.basketOpen = true;

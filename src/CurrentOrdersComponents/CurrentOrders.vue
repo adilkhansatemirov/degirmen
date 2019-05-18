@@ -39,7 +39,7 @@
               <v-dish-item :dish="dish"></v-dish-item>
             </li>
 
-            <v-order-count-money :order="order"></v-order-count-money>
+            <v-order-count-money :order="order" :adminMode="adminMode"></v-order-count-money>
 
             <div class="button-group" v-if="orderOfThisWaiter(order)">
               <a class="button" @click="updateOrder(order)">Изменить</a>
@@ -118,7 +118,7 @@ export default {
     },
     orderOfThisWaiter: function(order) {
       if (this.adminMode) return true;
-      if(!order.hasOwnProperty("waiterName")){
+      if (!order.hasOwnProperty("waiterName")) {
         return false;
       }
       return order.waiterName === this.waiterName;
