@@ -4,7 +4,7 @@
     <!-- <input v-model="text" type="text" placeholder="text"> -->
     <!-- <button @click.prevent="postRequest()">post data</button> -->
     <!-- <button @click="fillHistory()">Fill history</button> -->
-    <button @click="fillDishes()">Fill dishes</button>
+    <button @click="correctHistory()">Fill dishes</button>
     <!-- <button @click="clearHistory()">Clear history</button> -->
   </div>
 </template>
@@ -31,10 +31,135 @@ export default {
         "October",
         "November",
         "December"
+      ],
+      names: [
+        "baklavas",
+        "breakfasts",
+        "cakes",
+        "cocktails",
+        "doners",
+        "drinks",
+        "garnirs",
+        "hotDrinks",
+        "iceCreams",
+        "mainDishes",
+        "pizzas",
+        "salats",
+        "shashlyks",
+        "soups",
+        "tandyrs"
       ]
     };
   },
   methods: {
+    fillHistoryTemplate: function() {
+      const dishSets = [];
+      db.collection("dishes")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            dishSets.push(doc.data());
+          });
+        })
+        .then(() => {
+          const dishes = {};
+          const names = [
+            "baklavas",
+            "breakfasts",
+            "cakes",
+            "cocktails",
+            "doners",
+            "drinks",
+            "garnirs",
+            "hotDrinks",
+            "iceCreams",
+            "mainDishes",
+            "pizzas",
+            "salats",
+            "shashlyks",
+            "soups",
+            "tandyrs"
+          ];
+          dishSets.forEach((dishSet, i) => {
+            dishes[names[i]] = [];
+            const arrayOfDishes = dishSet[names[i]];
+            arrayOfDishes.forEach(dish => {
+              dishes[names[i]].push({
+                name: dish.name,
+                costSmall: dish.costSmall,
+                costStand: dish.costStand,
+                counterSmall: 0,
+                counterStand: 0
+              });
+            });
+          });
+
+          const waitersStats = [
+            {
+              counterMoney: 0,
+              counterOrders: 0,
+              name: "Арман"
+            },
+            {
+              counterMoney: 0,
+              counterOrders: 0,
+              name: "Бекзат"
+            }
+          ];
+          const counterMoney = 0;
+          const deliveryMoney = 0;
+          const discountMoney = 0;
+          db.collection("history")
+            .doc("Today")
+            .set({
+              dishes,
+              waitersStats,
+              counterMoney,
+              deliveryMoney,
+              discountMoney
+            })
+            .then(docRef => {
+              console.log(docRef);
+              console.log("success");
+            });
+        });
+    },
+    correctHistory() {
+      db.collection("history")
+        .doc("Today")
+        .get()
+        .then(doc => {
+          let {
+            dishes,
+            waitersStats,
+            counterMoney,
+            deliveryMoney,
+            discountMoney
+          } = doc.data();
+          console.log(dishes);
+          this.names.forEach(sectionName => {
+            dishes[sectionName] = dishes[sectionName].map(dish => {
+              let newDish = {...dish}
+              newDish.counterMoney = 0;
+              return newDish;
+            })
+          })
+          console.log(dishes);
+          db.collection("history")
+            .doc("Today")
+            .set({
+              dishes,
+              waitersStats,
+              counterMoney,
+              deliveryMoney,
+              discountMoney
+            })
+            .then(docRef => {
+              console.log(docRef);
+              console.log("success");
+            });
+        });
+    },
     fillHistory: function() {
       db.collection("history")
         .doc("Today")
@@ -134,7 +259,7 @@ export default {
             "Киви",
             "Банановое",
             "Фисташковое",
-            "Сливочное мараш",
+            "Сливочное мараш"
           ];
 
           let iceCreams = [];
@@ -149,7 +274,6 @@ export default {
             });
           });
           console.log(iceCreams);
-          
 
           db.collection("dishes")
             .doc("iceCreams")

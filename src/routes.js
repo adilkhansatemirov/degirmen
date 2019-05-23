@@ -27,72 +27,72 @@ export default [
     meta: { requiresAuth: true },
     children: [
       {
-        name: "today",
+        name: "Сегодня",
         path: "today",
         component: Period
       },
       {
-        name: "yesterday",
+        name: "Вчера",
         path: "yesterday",
         component: Period
       },
       {
-        name: "january",
+        name: "Январь",
         path: "january",
         component: Period
       },
       {
-        name: "february",
+        name: "Февраль",
         path: "february",
         component: Period
       },
       {
-        name: "march",
+        name: "Март",
         path: "march",
         component: Period
       },
       {
-        name: "april",
+        name: "Апрель",
         path: "april",
         component: Period
       },
       {
-        name: "may",
+        name: "Май",
         path: "may",
         component: Period
       },
       {
-        name: "june",
+        name: "Июнь",
         path: "june",
         component: Period
       },
       {
-        name: "july",
+        name: "Июль",
         path: "july",
         component: Period
       },
       {
-        name: "august",
+        name: "Август",
         path: "august",
         component: Period
       },
       {
-        name: "september",
+        name: "Сентябрь",
         path: "september",
         component: Period
       },
       {
-        name: "october",
+        name: "Октябрь",
         path: "october",
         component: Period
       },
       {
-        name: "november",
+        name: "Ноябрь",
         path: "november",
         component: Period
       },
       {
-        name: "december",
+        name: "Декабрь",
         path: "december",
         component: Period
       }

@@ -29,11 +29,7 @@ export default {
   data() {
     return {};
   },
-  methods: {},
-  created(){
-    console.log("history created");
-    
-  }
+  methods: {}
 };
 </script>
 
@@ -68,7 +64,7 @@ export default {
   -moz-box-shadow: 2px 2px 3px 0 rgba(42, 42, 42, 0.6);
   box-shadow: 2px 2px 3px 0 rgba(42, 42, 42, 0.6);
 }
-.link:active{
+.link:active {
   background: #ff9e9e;
 }
 </style>

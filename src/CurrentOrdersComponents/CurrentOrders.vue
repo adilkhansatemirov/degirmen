@@ -22,7 +22,7 @@
         >Закрыть кассу на сегодня</a>
         <a
           class="close-cashier-button disabled"
-          v-if="orders.length==0 && passwordCorrect != passwordInput"
+          v-else-if="orders.length==0 && passwordCorrect != passwordInput"
         >Закрыть кассу на сегодня</a>
       </div>
 
@@ -50,7 +50,7 @@
                   v-if="passwordCorrect == passwordInput"
                   @click="archiveOrder(order)"
                 >Сохранить</a>
-                <a class="button disabled" v-if="passwordCorrect != passwordInput">Сохранить</a>
+                <a class="button disabled" v-else>Сохранить</a>
               </div>
             </div>
           </div>
@@ -126,8 +126,8 @@ export default {
     archiveOrder: function(order) {
       this.passwordInput = "";
       this.updateHistory(order, "Today");
-      this.updateHistory(order, this.getMonth(order));
-      this.cancelOrder(order);
+      // this.updateHistory(order, this.getMonth(order));
+      // this.cancelOrder(order);
     },
     updateHistory: function(order, time) {
       db.collection("history")

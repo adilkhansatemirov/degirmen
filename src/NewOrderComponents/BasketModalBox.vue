@@ -3,6 +3,7 @@
     <div class="background" ref="basketBackground" @click="closeBasket($event)">
       <div class="modal-box">
         <div class="slide-container" ref="slideContainer">
+          <!-- DELIVERY SLIDE -->
           <div class="slide-item">
             <h3>Доставка</h3>
             <form @submit.prevent="saveOrder()">
@@ -23,6 +24,7 @@
             </form>
           </div>
 
+          <!-- DISHES SLIDE -->
           <div class="slide-item">
             <div class="basket-empty" v-if="basket.length == 0">Корзина пуста</div>
             <h3>Заказ</h3>
@@ -73,6 +75,7 @@
             </div>
           </div>
 
+          <!-- CAFE SLIDE -->
           <div class="slide-item">
             <h3>Кафе</h3>
             <div class="takeaway-holder">
@@ -172,9 +175,11 @@ export default {
       return Object.keys(this.$route.params).length === 0;
     },
     amountChange: function(dish, number) {
+      //if plus is pressed
       if (number === 1) {
         this.$emit("addToBasket", dish.dish);
       } else {
+        //delete dish in both baskets
         for (let i = 0; i < this.basket.length; i++) {
           if (dish.dish.name == this.basket[i].dish.name) {
             this.basket[i].amount--;
@@ -258,7 +263,7 @@ export default {
             console.log("written");
           });
       }
-      this.printRequest(orderToPost);
+      // this.printRequest(orderToPost);
       this.$router.push("/orders");
     },
     printRequest: function(order) {
