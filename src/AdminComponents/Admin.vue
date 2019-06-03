@@ -5,7 +5,7 @@
     <!-- <button @click.prevent="postRequest()">post data</button> -->
     <!-- <button @click="fillHistory()">Fill history</button> -->
     <button @click="correctHistory()">Fill dishes</button>
-    <!-- <button @click="clearHistory()">Clear history</button> -->
+    <button @click="fillHistory()">Fill history</button>
   </div>
 </template>
 
@@ -139,11 +139,11 @@ export default {
           console.log(dishes);
           this.names.forEach(sectionName => {
             dishes[sectionName] = dishes[sectionName].map(dish => {
-              let newDish = {...dish}
+              let newDish = { ...dish };
               newDish.counterMoney = 0;
               return newDish;
-            })
-          })
+            });
+          });
           console.log(dishes);
           db.collection("history")
             .doc("Today")
@@ -165,85 +165,31 @@ export default {
         .doc("Today")
         .get()
         .then(doc => {
-          let waitersMoney = doc.data().waitersMoney;
+          const {
+            counterMoney,
+            deliveryMoney,
+            discountMoney,
+            dishes,
+            waitersStats
+          } = doc.data();
 
-          let deliveryMoney = doc.data().deliveryMoney;
-          let discountMoney = doc.data().discountMoney;
-          let counterTotal = doc.data().counterTotal;
-          let dishes = doc.data().dishes;
-
-          let dishes1 = dishes.slice(0, 29);
-          let dishes2 = dishes.slice(38);
-          dishes = [];
-
-          //continue with other dishes
-          db.collection("dishes")
-            .doc("iceCreams")
-            .get()
-            .then(doc => {
-              let iceCreams = doc.data().iceCreams;
-              for (let i = 0; i < iceCreams.length; i++) {
-                let dish = {
-                  costSmall: iceCreams[i].costSmall,
-                  costStand: iceCreams[i].costStand,
-                  counterMoney: 0,
-                  counterSmall: 0,
-                  counterStand: 0,
-                  name: iceCreams[i].name,
-                  type: "Донеры"
-                };
-                let dish1 = {
-                  costSmall: iceCreams[i].costSmall,
-                  costStand: iceCreams[i].costStand,
-                  counterMoney: 0,
-                  counterSmall: 0,
-                  counterStand: 0,
-                  name: iceCreams[i].name + " (с сыром)",
-                  type: "Донеры"
-                };
-                dishes1.push(dish);
-                dishes1.push(dish1);
-              }
-
-              for (let i = 0; i < dishes1.length; i++) {
-                dishes.push(dishes1[i]);
-              }
-              for (let i = 0; i < dishes2.length; i++) {
-                dishes.push(dishes2[i]);
-              }
-
-              db.collection("history")
-                .doc("Today")
-                .set({
-                  dishes,
-                  waitersMoney,
-                  deliveryMoney,
-                  discountMoney,
-                  counterTotal
-                });
-            });
-
-          // db.collection("history")
-          //   .doc("Yesterday")
-          //   .set({
-          //     dishes,
-          //     waitersMoney,
-          //     deliveryMoney,
-          //     discountMoney,
-          //     counterTotal
-          //   });
-
-          // for (let i = 0; i < this.months.length; i++) {
-          //   db.collection("history")
-          //     .doc(this.months[i])
-          //     .set({
-          //       dishes,
-          //       waitersMoney,
-          //       deliveryMoney,
-          //       discountMoney,
-          //       counterTotal
-          //     });
-          // }
+          this.months.forEach(month => {
+            db.collection("history")
+              .doc(month)
+              .set({
+                counterMoney,
+                deliveryMoney,
+                discountMoney,
+                dishes,
+                waitersStats
+              })
+              .then(() => {
+                console.log("Document successfully written!");
+              })
+              .catch(error => {
+                console.error("Error writing document: ", error);
+              });
+          });
         });
     },
     fillDishes: function() {

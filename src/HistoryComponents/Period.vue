@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <h4>{{routePosition}}</h4>
+    <h4>
+      <v-loading v-if="loading"></v-loading>
+      {{routePosition}}
+    </h4>
 
     <!-- SOUPS -->
     <v-dishes-group
@@ -39,7 +42,7 @@
 
     <!-- SALATS -->
     <v-dishes-group
-      :dishes="soups"
+      :dishes="salats"
       :sectionName="'Салаты'"
       :portionSmall="'Половина'"
       :portionStand="'Порция'"
@@ -70,7 +73,7 @@
 
     <!-- HOT DRINKS -->
     <v-dishes-group
-      :dishes="soups"
+      :dishes="hotDrinks"
       :sectionName="'Горячие напитки'"
       :portionSmall="'Чашка'"
       :portionStand="'Чайник'"
@@ -78,7 +81,7 @@
 
     <!-- DRINKS -->
     <v-dishes-group
-      :dishes="soups"
+      :dishes="drinks"
       :sectionName="'Напитки'"
       :portionSmall="'0.5л'"
       :portionStand="'1л'"
@@ -86,10 +89,10 @@
 
     <!-- MONEY STATISTICS -->
     <div class="total-money-list">
-      <p>Общая сумма: {{counterTotal}}</p>
+      <p>Общая сумма: {{counterMoney}}</p>
       <p>Скидка: {{discountMoney}}</p>
       <p>Доставка: {{deliveryMoney}}</p>
-      <p>В кассе: {{counterTotal - discountMoney + deliveryMoney}}</p>
+      <p>В кассе: {{counterMoney - discountMoney + deliveryMoney}}</p>
     </div>
 
     <!-- WAITER'S MONEY -->
@@ -111,13 +114,16 @@
 <script>
 import db from "../firebase/firebase-init";
 import DishesGroup from "./DishesGroup";
+import Loading from "../Mixins/Loading";
+
 export default {
   components: {
-    "v-dishes-group": DishesGroup
+    "v-dishes-group": DishesGroup,
+    "v-loading": Loading
   },
   data() {
     return {
-      counterTotal: 0,
+      counterMoney: 0,
       deliveryMoney: 0,
       discountMoney: 0,
       waitersStats: [],
@@ -136,15 +142,26 @@ export default {
       shashlyks: [],
       soups: [],
       tandyrs: [],
-      routePosition: null
+      routePosition: null,
+      loading: false
     };
   },
   beforeRouteEnter(to, from, next) {
-    console.log(to.name);
     next(vm => {
+      const capitalize = string => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      };
+      let docName = capitalize(to.path.split("/")[2]);
+
       vm.routePosition = to.name;
+
+      const self = vm;
+      vm.$nextTick(() => {
+        self.loading = true;
+      });
+
       db.collection("history")
-        .doc("Today")
+        .doc(docName)
         .get()
         .then(doc => {
           vm.counterMoney = doc.data().counterMoney;
@@ -168,7 +185,7 @@ export default {
           vm.soups = doc.data().dishes.soups;
           vm.tandyrs = doc.data().dishes.tandyrs;
 
-          console.log(vm.soups);
+          vm.loading = false;
         });
     });
   }
@@ -183,6 +200,7 @@ h4 {
   text-align: center;
   font-size: 1.5rem;
   margin: 0.5rem 0;
+  position: relative;
 }
 .total-money-list {
   margin-bottom: 2rem;
@@ -200,5 +218,8 @@ h4 {
 .waiter-counter {
   text-align: center;
   flex: 1;
+}
+.waiters-list {
+  padding-bottom: 5rem;
 }
 </style>

@@ -18,11 +18,14 @@
         <a
           class="close-cashier-button"
           @click="clearHistory()"
-          v-if="orders.length==0 && passwordCorrect == passwordInput"
-        >Закрыть кассу на сегодня</a>
+          v-if="orders.length===0 && passwordCorrect === passwordInput"
+        >
+          <p v-if="loading">Подождите..</p>
+          <p v-else>Закрыть кассу на сегодня</p>
+        </a>
         <a
           class="close-cashier-button disabled"
-          v-else-if="orders.length==0 && passwordCorrect != passwordInput"
+          v-else-if="orders.length===0 && passwordCorrect !== passwordInput"
         >Закрыть кассу на сегодня</a>
       </div>
 
@@ -66,6 +69,7 @@ import firebase from "firebase/app";
 import DishItem from "./DishItem.vue";
 import OrderInfo from "./OrderInfo.vue";
 import OrderCountMoney from "./OrderCountMoney.vue";
+import { countDiscount, service } from "../Mixins/countMoneyMixin";
 
 export default {
   components: {
@@ -93,7 +97,8 @@ export default {
       passwordInput: "",
       passwordCorrect: "hello",
       adminMode: false,
-      waiterName: null
+      waiterName: null,
+      loading: false
     };
   },
   methods: {
@@ -127,7 +132,7 @@ export default {
       this.passwordInput = "";
       this.updateHistory(order, "Today");
       // this.updateHistory(order, this.getMonth(order));
-      // this.cancelOrder(order);
+      this.cancelOrder(order);
     },
     updateHistory: function(order, time) {
       db.collection("history")
@@ -136,136 +141,170 @@ export default {
         .then(doc => {
           //get info from database
           let dishes = doc.data().dishes;
-          let waitersMoney = doc.data().waitersMoney;
+          let waitersStats = doc.data().waitersStats;
           let deliveryMoney = doc.data().deliveryMoney;
           let discountMoney = doc.data().discountMoney;
-          let counterTotal = doc.data().counterTotal;
+          let counterMoney = doc.data().counterMoney;
 
-          //LOOK THROUGH THE ORDER
-          if (order.type == "Кафе") {
-            //update number of orders and counter money of waiter that took the order
-            if (order.discount != 0) {
-              discountMoney += order.total - this.countDiscount(order);
-            }
-            if (!order.takeaway) {
-              for (let i = 0; i < waitersMoney.length; i++) {
-                if (waitersMoney[i].waiterName == order.waiterName) {
-                  waitersMoney[i].numberOfOrders++;
-                  waitersMoney[i].counterMoney += this.service(order);
-                  break;
-                }
+          const updateGarnirHistory = (dish, garnirPrice) => {
+            //dish.dish.name ==> 'Мясо с грибами с гарниром Бульгур'
+            //we need to take 'Бульгур'
+            const dishNameArray = dish.dish.name.split(" ");
+            const garnirName = dishNameArray[dishNameArray.length - 1];
+            dishes.garnirs = dishes.garnirs.map(garnir => {
+              if (garnir.name.split(" ")[1] === garnirName) {
+                return {
+                  ...garnir,
+                  counterStand: garnir.counterStand + dish.amount,
+                  counterMoney: garnir.counterMoney + garnirPrice * dish.amount
+                };
               }
-            }
+              return garnir;
+            });
+          };
+
+          //iterate through all dishes in basket
+          order.dishes.forEach(orderDish => {
+            dishes[orderDish.dish.type] = dishes[orderDish.dish.type].map(
+              historyDish => {
+                if (orderDish.dish.nameDefault === historyDish.name) {
+                  if (
+                    //if small dish (половина)
+                    orderDish.dish.name.includes(
+                      orderDish.dish.portionSmall.toLowerCase()
+                    )
+                  ) {
+                    return {
+                      ...historyDish,
+                      counterSmall: historyDish.counterSmall + orderDish.amount,
+                      counterMoney:
+                        historyDish.counterMoney +
+                        orderDish.dish.cost * orderDish.amount
+                    };
+                  } else {
+                    //if big dish (порция)
+                    if (orderDish.dish.name.includes("с гарниром")) {
+                      const garnirPrice =
+                        orderDish.dish.cost - orderDish.dish.costStand;
+                      updateGarnirHistory(orderDish, garnirPrice);
+                    }
+                    return {
+                      ...historyDish,
+                      counterStand: historyDish.counterStand + orderDish.amount,
+                      counterMoney:
+                        historyDish.counterMoney +
+                        orderDish.dish.cost * orderDish.amount
+                    };
+                  }
+                }
+                return historyDish;
+              }
+            );
+          });
+
+          //count discount and delivery money
+          if (order.type === "Кафе") {
+            waitersStats = waitersStats.map(waiter => {
+              if (waiter.name === order.waiterName) {
+                return {
+                  ...waiter,
+                  counterMoney: waiter.counterMoney + service(order),
+                  counterOrders: waiter.counterOrders + 1
+                };
+              }
+              return waiter;
+            });
+            discountMoney += countDiscount(order);
           } else {
-            //add to delivery money
             deliveryMoney += 300;
           }
-
-          for (let i = 0; i < dishes.length; i++) {
-            //dishes in list of history
-            for (let j = 0; j < order.dishes.length; j++) {
-              //dishes in order
-              if (
-                dishes[i].name == order.dishes[j].dish.nameDefault &&
-                dishes[i].type != "Горячие блюда"
-              ) {
-                let totalOfDish;
-                if (dishes[i].costSmall == order.dishes[j].dish.cost) {
-                  dishes[i].counterSmall += order.dishes[j].amount;
-                  totalOfDish = dishes[i].costSmall * order.dishes[j].amount;
-                } else {
-                  dishes[i].counterStand += order.dishes[j].amount;
-                  totalOfDish = dishes[i].costStand * order.dishes[j].amount;
-                }
-                dishes[i].counterMoney += totalOfDish;
-                counterTotal += totalOfDish;
-              } else if (
-                dishes[i].name == order.dishes[j].dish.nameDefault &&
-                dishes[i].type == "Горячие блюда"
-              ) {
-                let totalOfDish;
-                if (order.dishes[j].dish.name.includes("(без гарнира)")) {
-                  dishes[i].counterSmall += order.dishes[j].amount;
-                  totalOfDish = dishes[i].costSmall * order.dishes[j].amount;
-                } else {
-                  dishes[i].counterStand += order.dishes[j].amount;
-                  totalOfDish = dishes[i].costStand * order.dishes[j].amount;
-                }
-                dishes[i].counterMoney += totalOfDish;
-                counterTotal += totalOfDish;
-              }
-            }
-          }
+          counterMoney += order.total;
 
           db.collection("history")
             .doc(time)
             .set({
               dishes,
-              waitersMoney,
+              waitersStats,
               deliveryMoney,
               discountMoney,
-              counterTotal
+              counterMoney
             });
         });
     },
     clearHistory: function() {
+      //mutate state to rerender
+      const self = this;
+      this.$nextTick(() => {
+        self.loading = true;
+      });
+
+      //prevent nervous clicks
+      if (this.loading) {
+        return;
+      }
+
       db.collection("history")
         .doc("Today")
         .get()
         .then(doc => {
+          //get data from Today
           let dishes = doc.data().dishes;
-          let waitersMoney = doc.data().waitersMoney;
+          let waitersStats = doc.data().waitersStats;
           let deliveryMoney = doc.data().deliveryMoney;
           let discountMoney = doc.data().discountMoney;
-          let counterTotal = doc.data().counterTotal;
+          let counterMoney = doc.data().counterMoney;
 
+          //set to Yesterday
           db.collection("history")
             .doc("Yesterday")
             .set({
               dishes,
-              waitersMoney,
+              waitersStats,
               deliveryMoney,
               discountMoney,
-              counterTotal
+              counterMoney
             })
             .then(() => {
-              for (let i = 0; i < dishes.length; i++) {
-                dishes[i].counterSmall = 0;
-                dishes[i].counterStand = 0;
-                dishes[i].counterMoney = 0;
+              //empty Today
+              for (let dishesType in dishes) {
+                dishes[dishesType] = dishes[dishesType].map(dish => {
+                  return {
+                    ...dish,
+                    counterSmall: 0,
+                    counterStand: 0,
+                    counterMoney: 0
+                  };
+                });
               }
-              for (let i = 0; i < waitersMoney.length; i++) {
-                waitersMoney[i].numberOfOrders = 0;
-                waitersMoney[i].counterMoney = 0;
-              }
+
+              waitersStats = waitersStats.map(waiter => {
+                return {
+                  ...waiter,
+                  counterMoney: 0,
+                  counterOrders: 0
+                };
+              });
 
               deliveryMoney = 0;
               discountMoney = 0;
-              counterTotal = 0;
+              counterMoney = 0;
 
               db.collection("history")
                 .doc("Today")
                 .set({
                   dishes,
-                  waitersMoney,
+                  waitersStats,
                   deliveryMoney,
                   discountMoney,
-                  counterTotal
+                  counterMoney
+                })
+                .then(() => {
+                  alert("Завершено");
+                  this.passwordInput = "";
                 });
             });
-
-          // for (let i = 0; i < this.months.length; i++) {
-          //   db.collection("history")
-          //     .doc(this.months[i])
-          //     .set({
-          //       dishes,
-          //       waitersMoney,
-          //       deliveryMoney,
-          //       discountMoney,
-          //       counterTotal
-          //     });
-          // }
         });
+      this.loading = false;
     },
     allowToSave() {
       return this.$refs.passwordToSaveInput.value == this.passwordToSaveOrder;

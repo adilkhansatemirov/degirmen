@@ -286,13 +286,9 @@ export default {
     },
     countTotal: function() {
       let total = 0;
-      for (let i = 0; i < this.basket.length; i++) {
-        if (this.isHalf(this.basket[i].dish)) {
-          total += this.basket[i].dish.costSmall * this.basket[i].amount;
-        } else {
-          total += this.basket[i].dish.costStand * this.basket[i].amount;
-        }
-      }
+      this.basket.forEach(dish => {
+        total += dish.dish.cost * dish.amount;
+      });
       return total;
     }
   },

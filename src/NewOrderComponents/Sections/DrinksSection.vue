@@ -77,6 +77,7 @@ export default {
         for (let i = 0; i < drinks.length; i++) {
           const drinkItem = {
             key: `drink${i}`,
+            type: "drinks",
             name: drinks[i].name,
             portionSmall: drinks[i].portionSmall,
             portionStand: drinks[i].portionStand,

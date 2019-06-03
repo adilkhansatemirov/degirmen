@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < pizzas.length; i++) {
           const pizzaItem = {
             key: `pizza${i}`,
+            type: "pizzas",
             name: pizzas[i].name,
             portionSmall: pizzas[i].portionSmall,
             portionStand: pizzas[i].portionStand,

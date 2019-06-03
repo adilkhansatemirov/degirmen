@@ -114,6 +114,8 @@ export default {
   },
   methods: {
     addToBasket: function(dish) {
+      console.log(dish);
+
       const orderedDish = {
         dish,
         amount: 1
@@ -129,7 +131,7 @@ export default {
       if (putInBasket) {
         this.basket.push(orderedDish);
       }
-      if (Object.keys(this.$route.params).length !== 0) {
+      if (!this.newOrder()) {
         this.addToSecondBasket(dish);
       }
       this.$refs.basket.spinBasket();

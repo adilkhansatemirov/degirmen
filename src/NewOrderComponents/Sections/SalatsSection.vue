@@ -84,6 +84,7 @@ export default {
         for (let i = 0; i < salats.length; i++) {
           const salatItem = {
             key: `salat${i}`,
+            type: "salats",
             name: salats[i].name,
             portionSmall: salats[i].portionSmall,
             portionStand: salats[i].portionStand,

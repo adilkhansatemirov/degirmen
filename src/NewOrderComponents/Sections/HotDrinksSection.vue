@@ -7,7 +7,7 @@
           <li v-for="hotDrink in hotDrinks" :key="hotDrink.key" class="meal-item color-dark-red">
             <h4>{{hotDrink.name}}</h4>
             <div class="portion-size-choise-box">
-             <a
+              <a
                 v-if="hotDrink.costSmall != 0"
                 class="portion__option"
                 @click="addToBasket(hotDrink, hotDrink.costSmall)"
@@ -69,6 +69,7 @@ export default {
         for (let i = 0; i < hotDrinks.length; i++) {
           const hotDrinkItem = {
             key: `hotDrink${i}`,
+            type: "hotDrinks",
             name: hotDrinks[i].name,
             portionSmall: hotDrinks[i].portionSmall,
             portionStand: hotDrinks[i].portionStand,

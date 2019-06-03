@@ -2,8 +2,7 @@
   <div>
     <div class="dish-item">
       <p class="dish-name">{{dish.dish.name}}</p>
-      <p class="dish-cost" v-if="isHalf(dish.dish)">{{dish.dish.costSmall}}</p>
-      <p class="dish-cost" v-else>{{dish.dish.costStand}}</p>
+      <p class="dish-cost">{{dish.dish.cost}}</p>
       <p class="dish-amount">{{dish.amount}}</p>
       <p class="dish-total">{{dish.amount * dish.dish.cost}}</p>
     </div>
@@ -15,14 +14,6 @@ export default {
   props: {
     dish: {
       type: Object
-    }
-  },
-  methods: {
-    isHalf: function(dish) {
-      if (dish.cost == dish.costSmall) {
-        return true;
-      }
-      return false;
     }
   }
 };

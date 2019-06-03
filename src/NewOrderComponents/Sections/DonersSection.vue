@@ -80,16 +80,7 @@ export default {
       const donerToSend = { ...doner };
       donerToSend.nameDefault = doner.name;
 
-      //firstly check 'CHEESE'
-      if (doner.toppings.includes("(с сыром)")) {
-        donerToSend.nameDefault += " с сыром";
-        donerToSend.name += " с сыром";
-        donerToSend.cost += 50;
-        donerToSend.costSmall += 50;
-        donerToSend.costStand += 50;
-      }
-
-      //secondly check 'PORTION SIZE'
+      //firstly check 'PORTION SIZE'
       if (doner.costSmall !== 0) {
         if (cost == doner.costSmall) {
           donerToSend.name += ` (${donerToSend.portionSmall.toLowerCase()})`;
@@ -102,20 +93,26 @@ export default {
         donerToSend.cost = donerToSend.costStand;
       }
 
+      //secondly check 'CHEESE'
+      if (doner.toppings.includes("(с сыром)")) {
+        donerToSend.name += " с сыром";
+        donerToSend.cost += 50;
+      }
+
       //thirdly check 'ONION'
       if (doner.toppings.includes("(без лука)")) {
         donerToSend.name += " (без лука)";
       }
 
       //lastly check 'COMMENT'
-      let commentInput = this.$refs["comment"+doner.key][0].value;
-      if (commentInput !== ""){
+      let commentInput = this.$refs["comment" + doner.key][0].value;
+      if (commentInput !== "") {
         donerToSend.name += ` (${commentInput})`;
       }
-      
+
       //empty everything`
       doner.toppings = [];
-      this.$refs["comment"+doner.key][0].value = "";
+      this.$refs["comment" + doner.key][0].value = "";
       this.$emit("addToBasket", donerToSend);
     },
     returnName(doner) {
@@ -138,6 +135,7 @@ export default {
         for (let i = 0; i < doners.length; i++) {
           const donerItem = {
             key: `doner${i}`,
+            type: "doners",
             name: doners[i].name,
             portionSmall: doners[i].portionSmall,
             portionStand: doners[i].portionStand,

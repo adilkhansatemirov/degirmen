@@ -70,23 +70,10 @@ export default {
           dishToSend.name += ` с гарниром ${this.garnirChosen}`;
           dishToSend.cost = cost;
           this.garnirChosen = null;
-        }else{
+        } else {
           dishToSend.name += ` (${dishToSend.portionSmall.toLowerCase()})`;
           dishToSend.cost = dishToSend.costSmall;
         }
-
-        // if (cost == dish.costSmall) {
-        //   dishToSend.name += ` (${dishToSend.portionSmall.toLowerCase()})`;
-        //   dishToSend.cost = dishToSend.costSmall;
-        // } else {
-        //   if (this.garnirChosen != null) {
-        //     dishToSend.name += ` с гарниром ${this.garnirChosen}`;
-        //     this.garnirChosen = null;
-        //   } else {
-        //     dishToSend.name += ` (${dishToSend.portionStand.toLowerCase()})`;
-        //   }
-        //   dishToSend.cost = dishToSend.costStand;
-        // }
       } else {
         dishToSend.cost = dishToSend.costStand;
       }
@@ -106,9 +93,11 @@ export default {
     },
     chooseGarnir: function(garnir) {
       this.garnirChosen = garnir.name;
-      this.addToBasket(this.dishWithGarnir, this.dishWithGarnir.costStand + garnir.cost);
+      this.addToBasket(
+        this.dishWithGarnir,
+        this.dishWithGarnir.costStand + garnir.cost
+      );
       this.closeGarnirs();
-      
     }
   },
   created() {
@@ -121,6 +110,7 @@ export default {
           const dishItem = {
             key: `mainDish${i}`,
             name: dishes[i].name,
+            type: "mainDishes",
             portionSmall: dishes[i].portionSmall,
             portionStand: dishes[i].portionStand,
             costSmall: dishes[i].costSmall,

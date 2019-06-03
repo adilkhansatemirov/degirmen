@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < iceCreams.length; i++) {
           const iceCreamItem = {
             key: `iceCream${i}`,
+            type: "iceCreams",
             name: iceCreams[i].name,
             portionSmall: iceCreams[i].portionSmall,
             portionStand: iceCreams[i].portionStand,

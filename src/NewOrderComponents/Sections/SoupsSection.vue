@@ -72,6 +72,7 @@ export default {
         for (let i = 0; i < soups.length; i++) {
           const soupItem = {
             key: `soup${i}`,
+            type: "soups",
             name: soups[i].name,
             portionSmall: soups[i].portionSmall,
             portionStand: soups[i].portionStand,

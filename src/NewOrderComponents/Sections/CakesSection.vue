@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < cakes.length; i++) {
           const cakeItem = {
             key: `cake${i}`,
+            type: "cakes",
             name: cakes[i].name,
             portionSmall: cakes[i].portionSmall,
             portionStand: cakes[i].portionStand,

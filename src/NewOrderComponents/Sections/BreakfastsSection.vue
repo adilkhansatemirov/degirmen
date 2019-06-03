@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < breakfasts.length; i++) {
           const breakfastItem = {
             key: `breakfast${i}`,
+            type: "breakfasts",
             name: breakfasts[i].name,
             portionSmall: breakfasts[i].portionSmall,
             portionStand: breakfasts[i].portionStand,

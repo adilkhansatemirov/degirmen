@@ -64,8 +64,8 @@ export default {
       }
       this.$emit("addToBasket", cocktailToSend);
     },
-    returnName: function(cocktail){
-        return cocktail.name.split(" ")[0];
+    returnName: function(cocktail) {
+      return cocktail.name.split(" ")[0];
     }
   },
   created() {
@@ -77,6 +77,7 @@ export default {
         for (let i = 0; i < cocktails.length; i++) {
           const cocktailItem = {
             key: `cocktail${i}`,
+            type: "cocktails",
             name: cocktails[i].name,
             portionSmall: cocktails[i].portionSmall,
             portionStand: cocktails[i].portionStand,

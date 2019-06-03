@@ -74,8 +74,8 @@ export default {
         for (let i = 0; i < tandyrs.length; i++) {
           const tandyrItem = {
             key: `tandyr${i}`,
+            type: "tandyrs",
             name: tandyrs[i].name,
-            // imgUrl: require("../assets/menu/soups/" + doc.data().imgUrl),
             portionSmall: tandyrs[i].portionSmall,
             portionStand: tandyrs[i].portionStand,
             costSmall: tandyrs[i].costSmall,

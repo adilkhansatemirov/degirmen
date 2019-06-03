@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < baklavas.length; i++) {
           const baklavaItem = {
             key: `baklava${i}`,
+            type: "baklavas",
             name: baklavas[i].name,
             portionSmall: baklavas[i].portionSmall,
             portionStand: baklavas[i].portionStand,

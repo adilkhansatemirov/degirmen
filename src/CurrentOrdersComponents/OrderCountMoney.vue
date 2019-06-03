@@ -45,7 +45,7 @@ export default {
     },
     toPay: function(order) {
       if (order.type == "Кафе") {
-        return order.total + this.service(order) - this.countDiscount(order)
+        return order.total + this.service(order) - this.countDiscount(order);
       } else {
         return order.total + 300;
       }

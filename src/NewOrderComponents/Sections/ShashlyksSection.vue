@@ -74,6 +74,7 @@ export default {
         for (let i = 0; i < shashlyks.length; i++) {
           const shashlykItem = {
             key: `shashlyk${i}`,
+            type: "shashlyks",
             name: shashlyks[i].name,
             portionSmall: shashlyks[i].portionSmall,
             portionStand: shashlyks[i].portionStand,

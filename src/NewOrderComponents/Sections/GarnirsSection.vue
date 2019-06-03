@@ -74,8 +74,8 @@ export default {
         for (let i = 0; i < garnirs.length; i++) {
           const garnirItem = {
             key: `garnir${i}`,
+            type: "garnirs",
             name: garnirs[i].name,
-            // imgUrl: require("../assets/menu/soups/" + doc.data().imgUrl),
             portionSmall: garnirs[i].portionSmall,
             portionStand: garnirs[i].portionStand,
             costSmall: garnirs[i].costSmall,
