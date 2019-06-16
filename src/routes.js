@@ -1,10 +1,10 @@
-import NewOrder from './NewOrderComponents/NewOrder.vue';
-import CurrentOrders from './CurrentOrdersComponents/CurrentOrders.vue';
-import Admin from './AdminComponents/Admin.vue';
-import Login from './LoginComponents/Login.vue';
-import ControlPannel from './UserComponents/ControlPannel.vue';
-import History from './HistoryComponents/History.vue';
-import Period from './HistoryComponents/Period.vue';
+import NewOrder from './components/NewOrderComponents/NewOrder.vue'
+import CurrentOrders from './components/CurrentOrdersComponents/CurrentOrders.vue'
+import Admin from './components/AdminComponents/Admin.vue'
+import Login from './components/LoginComponents/Login.vue'
+import ControlPannel from './components/UserComponents/ControlPannel.vue'
+import History from './components/HistoryComponents/History.vue'
+import Period from './components/HistoryComponents/Period.vue'
 
 export default [
   { path: '/', component: NewOrder, meta: { requiresAuth: true } },
@@ -98,4 +98,4 @@ export default [
       }
     ]
   }
-];
+]
