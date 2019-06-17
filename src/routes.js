@@ -15,7 +15,12 @@ export default [
     meta: { requiresAuth: true }
   },
   { path: '/admin', component: Admin, meta: { requiresAuth: true } },
-  { path: '/login', component: Login, meta: { requiresGuest: true } },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { requiresGuest: true }
+  },
   {
     path: '/controlPannel',
     component: ControlPannel,

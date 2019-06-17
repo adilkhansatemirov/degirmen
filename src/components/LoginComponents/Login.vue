@@ -32,7 +32,6 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
-            console.log("nice");
             EventBus.$emit("accessAllowed");
             this.$router.push("/");
           },

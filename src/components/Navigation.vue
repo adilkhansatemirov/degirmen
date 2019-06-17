@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul v-if="loggedIn">
+    <ul v-if="isAuthentificated">
       <span class="user-button">
         <v-user-pannel
           @hideNavigation="hideNavigation()"
@@ -48,10 +48,18 @@ export default {
       userPannelOpen: false
     };
   },
-  created() {
-    if (firebase.auth().currentUser) {
-      this.loggedIn = true;
+  computed: {
+    isAuthentificated() {
+      return this.$store.state.auth.isAuthentificated;
     }
+  },
+  created() {
+    // if (firebase.auth().currentUser) {
+    //   this.loggedIn = true;
+    // }
+    // if(this.$store.state.auth.isAuthentificated) {
+    //   this.loggedIn = true;
+    // }
   },
   methods: {
     openUserPannel: function() {

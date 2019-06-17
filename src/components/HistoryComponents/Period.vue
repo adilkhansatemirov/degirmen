@@ -114,7 +114,7 @@
 <script>
 import db from "../../firebase/firebase-init";
 import DishesGroup from "./DishesGroup";
-import Loading from "../Mixins/Loading";
+import Loading from "../Shared/Loading";
 
 export default {
   components: {

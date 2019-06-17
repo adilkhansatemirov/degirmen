@@ -87,14 +87,19 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
+import store from './store/store'
 let app
 firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    store.dispatch('login', user.uid)
+  }
   if (!app) {
     app = new Vue({
       el: '#app',
       components: { App },
       template: '<App/>',
-      router: router
+      router,
+      store
     })
   }
 })

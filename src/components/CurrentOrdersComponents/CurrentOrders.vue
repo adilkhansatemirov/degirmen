@@ -44,7 +44,7 @@
 
             <v-order-count-money :order="order" :adminMode="adminMode"></v-order-count-money>
 
-            <div class="button-group" v-if="orderOfThisWaiter(order)">
+            <div class="button-group" v-if="showOrderActions(order)">
               <a class="button" @click="updateOrder(order)">Изменить</a>
               <a class="button" @click="cancelOrder(order)">Отменить</a>
               <div v-if="adminMode">
@@ -69,7 +69,7 @@ import firebase from "firebase/app";
 import DishItem from "./DishItem.vue";
 import OrderInfo from "./OrderInfo.vue";
 import OrderCountMoney from "./OrderCountMoney.vue";
-import { countDiscount, service } from "../Mixins/countMoneyMixin";
+import { countDiscount, service } from "../Shared/countMoneyMixin";
 
 export default {
   components: {
@@ -96,8 +96,6 @@ export default {
       ],
       passwordInput: "",
       passwordCorrect: "hello",
-      adminMode: false,
-      waiterName: null,
       loading: false
     };
   },
@@ -121,7 +119,7 @@ export default {
           console.log("Document successfully deleted!");
         });
     },
-    orderOfThisWaiter: function(order) {
+    showOrderActions: function(order) {
       if (this.adminMode) return true;
       if (!order.hasOwnProperty("waiterName")) {
         return false;
@@ -152,6 +150,7 @@ export default {
             const dishNameArray = dish.dish.name.split(" ");
             const garnirName = dishNameArray[dishNameArray.length - 1];
             dishes.garnirs = dishes.garnirs.map(garnir => {
+              // garnir.name ==> Гарнир Бульгур
               if (garnir.name.split(" ")[1] === garnirName) {
                 return {
                   ...garnir,
@@ -165,6 +164,7 @@ export default {
 
           //iterate through all dishes in basket
           order.dishes.forEach(orderDish => {
+            //override dishes of this type
             dishes[orderDish.dish.type] = dishes[orderDish.dish.type].map(
               historyDish => {
                 if (orderDish.dish.nameDefault === historyDish.name) {
@@ -343,17 +343,19 @@ export default {
           this.orders.push(order);
         });
       });
-    //setting adminMode
-    let { uid } = firebase.auth().currentUser;
-    db.collection("users")
-      .doc(uid)
-      .get()
-      .then(doc => {
-        this.adminMode = doc.data().status !== "Офицант";
-        if (!this.adminMode) {
-          this.waiterName = doc.data().name;
-        }
-      });
+  },
+  computed: {
+    adminMode() {
+      if (this.$store.state.auth.user) {
+        return this.$store.state.auth.user.status !== "Офицант";
+      } else return false;
+    },
+    waiterName() {
+      if (!this.adminMode && this.$store.state.auth.user) {
+        return this.$store.state.auth.user.name;
+      }
+      return null;
+    }
   }
 };
 </script>
