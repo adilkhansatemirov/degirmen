@@ -7,7 +7,6 @@
 
 <script>
 import Navigation from "./Navigation.vue";
-import EventBus from "../eventBus";
 
 export default {
   name: "App",

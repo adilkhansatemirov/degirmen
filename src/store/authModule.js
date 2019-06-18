@@ -39,7 +39,7 @@ export default {
   },
   getters: {
     getCurrentUser: state => {
-      return state.user
+      return state.user ? state.user : ''
     }
   }
 }

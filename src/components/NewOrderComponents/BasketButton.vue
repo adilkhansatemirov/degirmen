@@ -13,13 +13,13 @@
 
 <script>
 export default {
-  props: {
-    basket: {
-      type: Array
-    }
-  },
   data() {
     return {};
+  },
+  computed: {
+    basket() {
+      return this.$store.state.basket.basket;
+    }
   },
   methods: {
     openBasket: function() {

@@ -85,10 +85,7 @@
             <form @submit.prevent="saveOrder()" class="cafe-form">
               <div v-if="!takeaway">
                 <div class="waiter-name">
-                  <label for="waiter-name">
-                    Имя офицанта
-                    <span v-if="!adminMode">: {{waiterName}}</span>
-                  </label>
+                  <label for="waiter-name">Имя офицанта</label>
                   <select
                     v-if="adminMode"
                     v-model="waiterName"
@@ -96,8 +93,9 @@
                     id="waiterName"
                     required
                   >
-                    <option v-for="waiterName in waitersNames" :key="waiterName.key">{{waiterName}}</option>
+                    <option v-for="waiter in waitersList" :key="waiter.uid">{{waiter.name}}</option>
                   </select>
+                  <input id="waiterName" v-else type="text" :value="waiterName" readonly>
                 </div>
                 <div class="table">
                   <label for="table">Столик</label>
@@ -145,24 +143,31 @@ import firebase from "firebase/app";
 const axios = require("axios");
 
 export default {
-  props: {
-    basket: {
-      type: Array
-    },
-    secondBasket: {
-      type: Array
-    }
-  },
   data() {
     return {
       slideContainer: null,
       width: null,
       position: null,
       takeaway: false,
-      waitersNames: [],
-      waiterName: null,
-      adminMode: false
+      waiterName: null
     };
+  },
+  computed: {
+    user() {
+      return this.$store.getters.getCurrentUser;
+    },
+    adminMode() {
+      return this.user.status === "Администратор";
+    },
+    waitersList() {
+      return this.$store.state.waiters.waitersList;
+    },
+    basket() {
+      return this.$store.state.basket.basket;
+    },
+    secondBasket() {
+      return this.$store.state.basket.secondBasket;
+    }
   },
   methods: {
     isHalf: function(dish) {
@@ -177,38 +182,15 @@ export default {
     amountChange: function(dish, number) {
       //if plus is pressed
       if (number === 1) {
-        this.$emit("addToBasket", dish.dish);
+        this.$store.dispatch("addToBasket", dish.dish);
       } else {
         //delete dish in both baskets
-        for (let i = 0; i < this.basket.length; i++) {
-          if (dish.dish.name == this.basket[i].dish.name) {
-            this.basket[i].amount--;
-            if (this.basket[i].amount == 0) {
-              this.deleteDish(dish, this.basket);
-            }
-          }
-        }
-        for (let i = 0; i < this.secondBasket.length; i++) {
-          if (dish.dish.name == this.secondBasket[i].dish.name) {
-            this.secondBasket[i].amount--;
-            if (this.secondBasket[i].amount == 0) {
-              this.deleteDish(dish, this.secondBasket);
-            }
-          }
-        }
-      }
-    },
-    deleteDish: function(dish, basket) {
-      for (let i = 0; i < basket.length; i++) {
-        if (dish.dish.name == basket[i].dish.name) {
-          basket.splice(i, 1);
-          break;
-        }
+        this.$store.dispatch("decreaseAmount", dish.dish);
       }
     },
     closeBasket: function(event) {
       if (event.target == this.$refs.basketBackground) {
-        this.$emit("closeBasket");
+        this.$store.dispatch("closeBasket");
       }
     },
     moveToDelivery: function() {
@@ -320,28 +302,11 @@ export default {
   },
   created() {
     //setting adminMode
-    let { uid } = firebase.auth().currentUser;
-    db.collection("users")
-      .doc(uid)
-      .get()
-      .then(doc => {
-        this.adminMode = doc.data().status !== "Офицант";
-
-        if (!this.adminMode) {
-          this.waiterName = doc.data().name;
-        } else {
-          //getting list of waiters
-          db.collection("users")
-            .get()
-            .then(querySnapshot => {
-              querySnapshot.forEach(doc => {
-                if (doc.data().status === "Офицант") {
-                  this.waitersNames.push(doc.data().name);
-                }
-              });
-            });
-        }
-      });
+    if (this.adminMode) {
+      this.$store.dispatch("getWaitersList");
+    } else {
+      this.waiterName = this.user.name;
+    }
   }
 };
 </script>

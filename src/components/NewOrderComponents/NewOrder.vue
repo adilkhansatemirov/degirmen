@@ -47,13 +47,11 @@
     <div id="drinks"></div>
     <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
 
-    <v-basket-icon ref="basket" @openBasket="openBasket()" :basket="basket"></v-basket-icon>
+    <v-basket-button ref="basket" @openBasket="openBasket()"></v-basket-button>
     <v-basket-modal-box
-      @closeBasket="closeBasket()"
       @addToBasket="addToBasket($event)"
-      :basket="basket"
       :secondBasket="secondBasket"
-      v-if="basketOpen"
+      v-if="showBasket"
     ></v-basket-modal-box>
   </div>
 </template>
@@ -78,7 +76,7 @@ import CakesSection from "./Sections/CakesSection.vue";
 import BaklavasSection from "./Sections/BaklavasSection.vue";
 import IceCreamsSection from "./Sections/IceCreamsSection.vue";
 
-import BasketIcon from "./BasketButton.vue";
+import BasketButton from "./BasketButton.vue";
 import BasketModalBox from "./BasketModalBox.vue";
 
 import EventBus from "../../eventBus";
@@ -102,62 +100,36 @@ export default {
     "v-baklavas": BaklavasSection,
     "v-ice-creams": IceCreamsSection,
 
-    "v-basket-icon": BasketIcon,
+    "v-basket-button": BasketButton,
     "v-basket-modal-box": BasketModalBox
   },
   data() {
     return {
-      basket: [],
       secondBasket: [],
       basketOpen: false
     };
   },
+  computed: {
+    showBasket() {
+      return this.$store.state.basket.showBasket;
+    },
+    basket() {
+      return this.$store.state.basket.basket;
+    }
+  },
   methods: {
     addToBasket: function(dish) {
-      console.log(dish);
-
-      const orderedDish = {
-        dish,
-        amount: 1
-      };
-      let putInBasket = true;
-      for (let i = 0; i < this.basket.length; i++) {
-        if (this.basket[i].dish.name === orderedDish.dish.name) {
-          this.basket[i].amount++;
-          putInBasket = false;
-          break;
-        }
-      }
-      if (putInBasket) {
-        this.basket.push(orderedDish);
-      }
+      this.$store.dispatch("addToBasket", dish);
       if (!this.newOrder()) {
-        this.addToSecondBasket(dish);
+        this.$store.dispatch("addToSecondBasket", dish);
       }
       this.$refs.basket.spinBasket();
     },
-    addToSecondBasket: function(dish) {
-      const orderedDish = {
-        dish,
-        amount: 1
-      };
-      let putInBasket = true;
-      for (let i = 0; i < this.secondBasket.length; i++) {
-        if (this.secondBasket[i].dish.name === orderedDish.dish.name) {
-          this.secondBasket[i].amount++;
-          putInBasket = false;
-          break;
-        }
-      }
-      if (putInBasket) {
-        this.secondBasket.push(orderedDish);
-      }
-    },
     openBasket() {
-      this.basketOpen = true;
+      this.$store.dispatch("openBasket");
     },
     closeBasket: function() {
-      this.basketOpen = false;
+      this.$store.dispatch("closeBasket");
     },
     newOrder: function() {
       return Object.keys(this.$route.params).length === 0;
@@ -166,22 +138,8 @@ export default {
   created() {
     //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
     if (!this.newOrder()) {
-      db.collection("currentOrders")
-        .doc(this.$route.params.orderId)
-        .get()
-        .then(doc => {
-          this.basket = doc.data().dishes;
-        });
+      this.$store.dispatch("getDishesFromOrder", this.$route.params.orderId);
     }
-    EventBus.$on("openMenu", () => {
-      if (!this.newOrder()) {
-        this.basket = [];
-        this.secondBasket = [];
-      }
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off("openMenu");
   }
 };
 </script>

@@ -2,11 +2,7 @@
   <div>
     <ul v-if="isAuthentificated">
       <span class="user-button">
-        <v-user-pannel
-          @hideNavigation="hideNavigation()"
-          @closeUserPannel="closeUserPannel()"
-          v-show="userPannelOpen"
-        ></v-user-pannel>
+        <v-user-pannel @closeUserPannel="closeUserPannel()" v-show="userPannelOpen"></v-user-pannel>
         <div class="user-icon-holder" @click="openUserPannel()">
           <font-awesome-icon class="user-icon" icon="user"/>
         </div>
@@ -44,7 +40,6 @@ export default {
   },
   data() {
     return {
-      loggedIn: false,
       userPannelOpen: false
     };
   },
@@ -52,14 +47,6 @@ export default {
     isAuthentificated() {
       return this.$store.state.auth.isAuthentificated;
     }
-  },
-  created() {
-    // if (firebase.auth().currentUser) {
-    //   this.loggedIn = true;
-    // }
-    // if(this.$store.state.auth.isAuthentificated) {
-    //   this.loggedIn = true;
-    // }
   },
   methods: {
     openUserPannel: function() {
@@ -73,17 +60,12 @@ export default {
     },
     // in case of navigating from
     // 'update order' route to 'new order' route
-    // the basket stays filled, so we clear it by 'BUS'
+    // the basket stays filled, so we clear it
     pushToMenu: function() {
-      EventBus.$emit("openMenu");
+      this.$store.dispatch("setBasket", []);
+      this.$store.dispatch("setSecondBasket", []);
       this.$router.push("/");
     }
-  },
-  mounted() {
-    EventBus.$on("accessAllowed", () => {
-      this.loggedIn = true;
-      this.userPannelOpen = false;
-    });
   }
 };
 </script>
