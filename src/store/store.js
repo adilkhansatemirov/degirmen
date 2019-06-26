@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import authModule from './authModule'
 import basketModule from './basketModule'
 import waitersModule from './waitersModule'
+import dishesModule from './dishesModule'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
   modules: {
     auth: authModule,
     basket: basketModule,
-    waiters: waitersModule
+    waiters: waitersModule,
+    dishes: dishesModule
   }
 })

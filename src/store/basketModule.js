@@ -86,7 +86,7 @@ export default {
     closeBasket: context => {
       context.commit('CLOSE_BASKET')
     },
-    getDishesFromOrder: (context, orderId) => {
+    getDishesByOrderId: (context, orderId) => {
       db.collection('currentOrders')
         .doc(orderId)
         .get()

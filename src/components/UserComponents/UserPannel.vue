@@ -1,61 +1,103 @@
 <template>
-  <div>
-    <div class="user-info-container">
-      <span @click="closeUserPannel()" class="close-button">
-        <font-awesome-icon icon="times"/>
-      </span>
-      <h3 class="user-name">{{user.status}}, {{user.name}}</h3>
-      <button class="button" @click="enterConrtolPannel()">Войти в кабинет</button>
-      <button class="button" @click="logout()">Выйти из системы</button>
-    </div>
-  </div>
+   <div>
+      <div class="user-pannel-background" @click="closeUserPannel($event)">
+         <div class="user-pannel-container">
+            <div class="user-info-header">
+               <h3 class="user-info">{{ user.name }}, {{ user.status }}</h3>
+               <span @click="closeUserPannel($event, 'close')">
+                  <font-awesome-icon icon="times" />
+               </span>
+            </div>
+            <div class="user-info-link-group">
+               <div class="link" @click="redirect('/controlPannel')">
+                  <p>Войти в кабинет</p>
+                  <font-awesome-icon icon="sign-in-alt" />
+               </div>
+               <div class="link" @click="redirect('/updateDishes')">
+                  <p>Настроить блюда</p>
+                  <font-awesome-icon icon="hamburger" />
+               </div>
+               <div class="link" @click="logout()">
+                  <p>Выйти из системы</p>
+                  <font-awesome-icon icon="door-open" />
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    logout: function() {
-      this.$store.dispatch("logout", this);
-    },
-    enterConrtolPannel: function() {
-      this.$router.push("/controlPannel");
-      this.closeUserPannel();
-    },
-    closeUserPannel: function() {
-      this.$emit("closeUserPannel");
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.getters.getCurrentUser;
-    }
-  }
+   methods: {
+      logout: function() {
+         this.$store.dispatch("logout", this);
+      },
+      redirect: function(path) {
+         this.$router.push(path);
+         this.$store.dispatch("setBasket", []);
+         this.$emit("closeUserPannel");
+      },
+      closeUserPannel: function(event, close) {
+         if (!event) return;
+         if (event.target.className === "user-pannel-background" || close) {
+            this.$emit("closeUserPannel");
+         }
+      }
+   },
+   computed: {
+      user() {
+         return this.$store.getters.getCurrentUser;
+      }
+   }
 };
 </script>
 
 <style scoped>
-.user-info-container {
-  position: absolute;
-  background: rgba(80, 13, 13, 0.7);
-  bottom: 4.5rem;
-  padding: 0.5rem;
-  width: 12rem;
-  left: 0;
-  color: #fff;
+.user-pannel-background {
+   width: 100vw;
+   height: 100vh;
+   position: fixed;
+   top: 0;
+   left: 0;
+   z-index: 1;
 }
-.user-name {
-  padding: 0;
-  font-weight: lighter;
+.user-pannel-container {
+   position: absolute;
+   background: rgba(80, 13, 13, 0.8);
+   text-align: left;
+   bottom: 8.5rem;
+   width: 15rem;
+   left: 1rem;
+   color: #fff;
+}
+.user-info-header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding-bottom: 0.3rem;
+   background: rgb(63, 7, 7);
+   padding: 0.3rem 0.5rem;
+}
+.user-info {
+   padding: 0;
+   font-weight: lighter;
+   font-size: 1rem;
 }
 .close-button {
-  position: absolute;
-  top: 0;
-  right: 0.3rem;
-  z-index: 1;
+   position: absolute;
+   top: 0.1rem;
+   right: 0.5rem;
 }
-.button {
-  display: block;
-  width: 100%;
-  margin: 0.3rem 0;
+.user-info-link-group {
+   padding: 0.5rem;
+   margin-top: 0.3rem;
+}
+.link {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 0.4rem;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 </style>

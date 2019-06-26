@@ -63,6 +63,10 @@ import { faCarSide } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faPrint } from '@fortawesome/free-solid-svg-icons'
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons'
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHamburger } from '@fortawesome/free-solid-svg-icons'
 
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -82,6 +86,10 @@ library.add(faCarSide)
 library.add(faArrowRight)
 library.add(faArrowLeft)
 library.add(faPrint)
+library.add(faDoorOpen)
+library.add(faSignInAlt)
+library.add(faPencilAlt)
+library.add(faHamburger)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false

@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import db from "../../firebase/firebase-init";
+import db from "../../../firebase/firebase-init";
 import firebase from "firebase/app";
 const axios = require("axios");
 

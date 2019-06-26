@@ -1,59 +1,58 @@
 <template>
-  <div id="new-order">
-    <v-menu-nav></v-menu-nav>
+   <div id="new-order">
+      <v-menu-nav></v-menu-nav>
 
-    <div id="soups"></div>
-    <v-soups @addToBasket="addToBasket($event)"></v-soups>
+      <div id="soups"></div>
+      <v-soups @addToBasket="addToBasket($event)"></v-soups>
 
-    <div id="mainDishes"></div>
-    <v-main-dishes @addToBasket="addToBasket($event)"></v-main-dishes>
+      <div id="mainDishes"></div>
+      <v-main-dishes @addToBasket="addToBasket($event)"></v-main-dishes>
 
-    <div id="doners"></div>
-    <v-doners @addToBasket="addToBasket($event)"></v-doners>
+      <div id="doners"></div>
+      <v-doners @addToBasket="addToBasket($event)"></v-doners>
 
-    <div id="pizzas"></div>
-    <v-pizzas @addToBasket="addToBasket($event)"></v-pizzas>
+      <div id="pizzas"></div>
+      <v-pizzas @addToBasket="addToBasket($event)"></v-pizzas>
 
-    <div id="garnirs"></div>
-    <v-garnirs @addToBasket="addToBasket($event)"></v-garnirs>
+      <div id="garnirs"></div>
+      <v-garnirs @addToBasket="addToBasket($event)"></v-garnirs>
 
-    <div id="salats"></div>
-    <v-salats @addToBasket="addToBasket($event)"></v-salats>
+      <div id="salats"></div>
+      <v-salats @addToBasket="addToBasket($event)"></v-salats>
 
-    <div id="shashlyks"></div>
-    <v-shashlyks @addToBasket="addToBasket($event)"></v-shashlyks>
+      <div id="shashlyks"></div>
+      <v-shashlyks @addToBasket="addToBasket($event)"></v-shashlyks>
 
-    <div id="breakfasts"></div>
-    <v-breakfasts @addToBasket="addToBasket($event)"></v-breakfasts>
+      <div id="breakfasts"></div>
+      <v-breakfasts @addToBasket="addToBasket($event)"></v-breakfasts>
 
-    <div id="tandyrs"></div>
-    <v-tandyrs @addToBasket="addToBasket($event)"></v-tandyrs>
+      <div id="tandyrs"></div>
+      <v-tandyrs @addToBasket="addToBasket($event)"></v-tandyrs>
 
-    <div id="cakes"></div>
-    <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
+      <div id="cakes"></div>
+      <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
 
-    <div id="baklavas"></div>
-    <v-baklavas @addToBasket="addToBasket($event)"></v-baklavas>
+      <div id="baklavas"></div>
+      <v-baklavas @addToBasket="addToBasket($event)"></v-baklavas>
 
-    <div id="iceCreams"></div>
-    <v-ice-creams @addToBasket="addToBasket($event)"></v-ice-creams>
+      <div id="iceCreams"></div>
+      <v-ice-creams @addToBasket="addToBasket($event)"></v-ice-creams>
 
-    <div id="hotDrinks"></div>
-    <v-hot-drinks @addToBasket="addToBasket($event)"></v-hot-drinks>
+      <div id="hotDrinks"></div>
+      <v-hot-drinks @addToBasket="addToBasket($event)"></v-hot-drinks>
 
-    <div id="cocktails"></div>
-    <v-cocktails @addToBasket="addToBasket($event)"></v-cocktails>
+      <div id="cocktails"></div>
+      <v-cocktails @addToBasket="addToBasket($event)"></v-cocktails>
 
-    <div id="drinks"></div>
-    <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
+      <div id="drinks"></div>
+      <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
 
-    <v-basket-button ref="basket" @openBasket="openBasket()"></v-basket-button>
-    <v-basket-modal-box
-      @addToBasket="addToBasket($event)"
-      :secondBasket="secondBasket"
-      v-if="showBasket"
-    ></v-basket-modal-box>
-  </div>
+      <v-basket-button ref="basket"></v-basket-button>
+      <v-basket-modal-box
+         @addToBasket="addToBasket($event)"
+         v-if="showBasket"
+      ></v-basket-modal-box>
+   </div>
 </template>
 
 <script>
@@ -76,78 +75,73 @@ import CakesSection from "./Sections/CakesSection.vue";
 import BaklavasSection from "./Sections/BaklavasSection.vue";
 import IceCreamsSection from "./Sections/IceCreamsSection.vue";
 
-import BasketButton from "./BasketButton.vue";
-import BasketModalBox from "./BasketModalBox.vue";
+import BasketButton from "./BasketComponents/BasketButton.vue";
+import BasketModalBox from "./BasketComponents/BasketModalBox.vue";
 
 import EventBus from "../../eventBus";
 
 export default {
-  components: {
-    "v-menu-nav": MenuNav,
-    "v-soups": SoupsSection,
-    "v-main-dishes": MainDishesSection,
-    "v-doners": DonersSection,
-    "v-breakfasts": BreakfastsSection,
-    "v-salats": SalatsSection,
-    "v-garnirs": GarnirsSection,
-    "v-shashlyks": ShashlyksSection,
-    "v-pizzas": PizzasSection,
-    "v-tandyrs": TandyrsSection,
-    "v-hot-drinks": HotDrinksSection,
-    "v-cocktails": CocktailsSection,
-    "v-drinks": DrinksSection,
-    "v-cakes": CakesSection,
-    "v-baklavas": BaklavasSection,
-    "v-ice-creams": IceCreamsSection,
+   components: {
+      "v-menu-nav": MenuNav,
+      "v-soups": SoupsSection,
+      "v-main-dishes": MainDishesSection,
+      "v-doners": DonersSection,
+      "v-breakfasts": BreakfastsSection,
+      "v-salats": SalatsSection,
+      "v-garnirs": GarnirsSection,
+      "v-shashlyks": ShashlyksSection,
+      "v-pizzas": PizzasSection,
+      "v-tandyrs": TandyrsSection,
+      "v-hot-drinks": HotDrinksSection,
+      "v-cocktails": CocktailsSection,
+      "v-drinks": DrinksSection,
+      "v-cakes": CakesSection,
+      "v-baklavas": BaklavasSection,
+      "v-ice-creams": IceCreamsSection,
 
-    "v-basket-button": BasketButton,
-    "v-basket-modal-box": BasketModalBox
-  },
-  data() {
-    return {
-      secondBasket: [],
-      basketOpen: false
-    };
-  },
-  computed: {
-    showBasket() {
-      return this.$store.state.basket.showBasket;
-    },
-    basket() {
-      return this.$store.state.basket.basket;
-    }
-  },
-  methods: {
-    addToBasket: function(dish) {
-      this.$store.dispatch("addToBasket", dish);
-      if (!this.newOrder()) {
-        this.$store.dispatch("addToSecondBasket", dish);
+      "v-basket-button": BasketButton,
+      "v-basket-modal-box": BasketModalBox
+   },
+   computed: {
+      showBasket() {
+         return this.$store.state.basket.showBasket;
+      },
+      basket() {
+         return this.$store.state.basket.basket;
       }
-      this.$refs.basket.spinBasket();
-    },
-    openBasket() {
-      this.$store.dispatch("openBasket");
-    },
-    closeBasket: function() {
-      this.$store.dispatch("closeBasket");
-    },
-    newOrder: function() {
-      return Object.keys(this.$route.params).length === 0;
-    }
-  },
-  created() {
-    //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
-    if (!this.newOrder()) {
-      this.$store.dispatch("getDishesFromOrder", this.$route.params.orderId);
-    }
-  }
+   },
+   methods: {
+      addToBasket: function(dish) {
+         this.$store.dispatch("addToBasket", dish);
+         if (!this.newOrder()) {
+            this.$store.dispatch("addToSecondBasket", dish);
+         }
+         this.$refs.basket.spinBasket();
+      },
+      openBasket() {
+         this.$store.dispatch("openBasket");
+      },
+      closeBasket: function() {
+         this.$store.dispatch("closeBasket");
+      },
+      newOrder: function() {
+         return Object.keys(this.$route.params).length === 0;
+      }
+   },
+   created() {
+      this.$store.dispatch("getDishes");
+      //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
+      if (!this.newOrder()) {
+         this.$store.dispatch("getDishesByOrderId", this.$route.params.orderId);
+      }
+   }
 };
 </script>
 
 <style scoped>
 #new-order {
-  overflow: hidden;
-  padding-bottom: 4rem;
+   overflow: hidden;
+   padding-bottom: 4rem;
 }
 </style>
 

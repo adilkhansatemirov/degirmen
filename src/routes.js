@@ -5,6 +5,7 @@ import Login from './components/LoginComponents/Login.vue'
 import ControlPannel from './components/UserComponents/ControlPannel.vue'
 import History from './components/HistoryComponents/History.vue'
 import Period from './components/HistoryComponents/Period.vue'
+import UpdateDishes from './components/UpdateDishesComponents/UpdateDishes.vue'
 
 export default [
   { path: '/', component: NewOrder, meta: { requiresAuth: true } },
@@ -24,6 +25,11 @@ export default [
   {
     path: '/controlPannel',
     component: ControlPannel,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/updateDishes',
+    component: UpdateDishes,
     meta: { requiresAuth: true }
   },
   {
