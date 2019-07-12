@@ -175,7 +175,7 @@
                            <input
                               type="number"
                               min="1"
-                              max="21"
+                              max="24"
                               ref="table"
                               name="table"
                               id="table"
