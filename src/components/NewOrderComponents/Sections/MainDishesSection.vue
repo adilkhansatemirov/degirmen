@@ -54,7 +54,7 @@
          ref="chooseGarnir"
          @chooseGarnir="chooseGarnir($event)"
          @closeGarnirs="closeGarnirs()"
-         v-show="showGarnirsModal"
+         v-show="garnirsModalOpen"
       ></v-choose-garnir>
    </div>
 </template>
@@ -71,7 +71,7 @@ export default {
       return {
          garnirChosen: null,
          dishWithGarnir: null,
-         showGarnirsModal: false
+         garnirsModalOpen: false
       };
    },
    computed: {
@@ -80,54 +80,39 @@ export default {
       }
    },
    methods: {
-      addToBasket: function(dish, cost) {
-         //set name and cost to work with
-         const dishToSend = { ...dish };
-         dishToSend.nameDefault = dish.name;
-         if (dishToSend.costSmall != 0) {
-            if (this.garnirChosen != null) {
-               dishToSend.name += ` с гарниром ${this.garnirChosen}`;
-               dishToSend.cost = cost;
-               this.garnirChosen = null;
-            } else {
-               dishToSend.name += ` (${dishToSend.portionSmall.toLowerCase()})`;
-               dishToSend.cost = dishToSend.costSmall;
-            }
-         } else {
-            dishToSend.cost = dishToSend.costStand;
-         }
-         this.$emit("addToBasket", dishToSend);
-      },
       openGarnirs: function(dish, cost) {
-         if (dish.costSmall != 0) {
-            dish.cost = cost;
-            //open garnir menu and save dishWithGarnir
-            this.showGarnirsModal = true;
-            this.dishWithGarnir = dish;
-         } else {
-            this.addToBasket(dish, dish.costStand);
-         }
+         dish.cost = cost;
+         //open garnir menu and save dishWithGarnir
+         this.garnirsModalOpen = true;
+         this.dishWithGarnir = dish;
       },
       closeGarnirs: function() {
-         this.showGarnirsModal = false;
+         this.garnirsModalOpen = false;
       },
       chooseGarnir: function(garnir) {
          const dishToSend = { ...this.dishWithGarnir };
+         console.log(dishToSend);
+         //set default cost and name for dish
          dishToSend.nameDefault = dishToSend.name;
+         dishToSend.costDefault = dishToSend.cost;
+
+         if (dishToSend.costDefault === dishToSend.costSmall) {
+            dishToSend.name += ` (${dishToSend.portionSmall.toLowerCase()})`;
+         } else {
+            dishToSend.name += ` (${dishToSend.portionStand.toLowerCase()})`;
+         }
+         //modify name and cost
          if (garnir.name === "(без гарнира)") {
             dishToSend.name += "(без гарнира)";
          } else {
             dishToSend.name += ` с гарниром ${garnir.name}`;
          }
+         //set total cost with garnir's cost
          dishToSend.cost += garnir.cost;
+         dishToSend.garnirs = garnir.selected;
+
          this.$emit("addToBasket", dishToSend);
          console.log(dishToSend);
-
-         // this.garnirChosen = garnir.name;
-         // this.addToBasket(
-         //    this.dishWithGarnir,
-         //    this.dishWithGarnir.costStand + garnir.cost
-         // );
          this.closeGarnirs();
       }
    }

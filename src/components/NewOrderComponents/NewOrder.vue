@@ -1,5 +1,11 @@
 <template>
    <div id="new-order">
+      <button class="scroll up" @click="scroll(-300)">
+         <font-awesome-icon icon="chevron-up"></font-awesome-icon>
+      </button>
+      <button class="scroll down" @click="scroll(300)">
+         <font-awesome-icon icon="chevron-down"></font-awesome-icon>
+      </button>
       <v-menu-nav></v-menu-nav>
 
       <div id="soups"></div>
@@ -31,6 +37,18 @@
 
       <div id="cakes"></div>
       <v-cakes @addToBasket="addToBasket($event)"></v-cakes>
+
+      <div id="coockies"></div>
+      <v-coockies @addToBasket="addToBasket($event)"></v-coockies>
+
+      <div id="bakerys"></div>
+      <v-bakerys @addToBasket="addToBasket($event)"></v-bakerys>
+
+      <div id="breads"></div>
+      <v-breads @addToBasket="addToBasket($event)"></v-breads>
+
+      <div id="pies"></div>
+      <v-pies @addToBasket="addToBasket($event)"></v-pies>
 
       <div id="baklavas"></div>
       <v-baklavas @addToBasket="addToBasket($event)"></v-baklavas>
@@ -74,11 +92,17 @@ import DrinksSection from "./Sections/DrinksSection.vue";
 import CakesSection from "./Sections/CakesSection.vue";
 import BaklavasSection from "./Sections/BaklavasSection.vue";
 import IceCreamsSection from "./Sections/IceCreamsSection.vue";
+import CookiesSection from "./Sections/CookiesSection.vue";
+import BakerysSection from "./Sections/BakerysSection.vue";
+import BreadsSection from "./Sections/BreadsSection.vue";
+import PiesSection from "./Sections/PiesSection.vue";
 
 import BasketButton from "./BasketComponents/BasketButton.vue";
 import BasketModalBox from "./BasketComponents/BasketModalBox.vue";
 
 import EventBus from "../../eventBus";
+
+import jump from "jump.js";
 
 export default {
    components: {
@@ -98,6 +122,10 @@ export default {
       "v-cakes": CakesSection,
       "v-baklavas": BaklavasSection,
       "v-ice-creams": IceCreamsSection,
+      "v-coockies": CookiesSection,
+      "v-bakerys": BakerysSection,
+      "v-breads": BreadsSection,
+      "v-pies": PiesSection,
 
       "v-basket-button": BasketButton,
       "v-basket-modal-box": BasketModalBox
@@ -126,9 +154,15 @@ export default {
       },
       newOrder: function() {
          return Object.keys(this.$route.params).length === 0;
+      },
+      scroll: function(position) {
+         jump(position, {
+            duration: 300
+         });
       }
    },
    created() {
+      this.$store.dispatch("closeBasket");
       this.$store.dispatch("getDishes");
       //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
       if (!this.newOrder()) {
@@ -142,6 +176,28 @@ export default {
 #new-order {
    overflow: hidden;
    padding-bottom: 4rem;
+}
+.scroll {
+   position: fixed;
+   right: 0.5rem;
+   width: 4rem;
+   height: 4rem;
+   font-size: 2rem;
+   border-radius: 50%;
+   background: rgb(255, 220, 220);
+   color: rgb(100, 41, 41);
+   border: 2px solid rgb(100, 41, 41);
+}
+.up {
+   top: 5rem;
+}
+.down {
+   bottom: 9rem;
+}
+@media (max-width: 800px) {
+   .scroll {
+      display: none;
+   }
 }
 </style>
 

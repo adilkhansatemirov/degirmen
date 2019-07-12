@@ -4,7 +4,7 @@
       <!-- <input v-model="text" type="text" placeholder="text"> -->
       <!-- <button @click.prevent="postRequest()">post data</button> -->
       <!-- <button @click="fillHistory()">Fill history</button> -->
-      <button @click="correctHistory()">Fill dishes</button>
+      <button @click="deleteDish()">BUTTON</button>
    </div>
 </template>
 
@@ -51,47 +51,122 @@ export default {
       };
    },
    methods: {
+      deleteDish: function() {
+         // db.collection("dishes")
+         //    .doc(dish.type)
+         //    .get()
+         //    .then(doc => {
+         // let updatedDishes = doc.data()[dish.type];
+         // for (let i = 0; i < updatedDishes.length; i++) {
+         //    if (updatedDishes[i].name === dish.name) {
+         //       updatedDishes.splice(i, 1);
+         //       break;
+         //    }
+         // }
+
+         // db.collection("dishes")
+         //    .doc(dish.type)
+         //    .update({
+         //       [dish.type]: updatedDishes
+         //    })
+         //    .then(() => {});
+
+         let counter = 0;
+         db.collection("history")
+            .get()
+            .then(snapshot => {
+               snapshot.forEach(doc => {
+                  let updatedDishesHistory = doc.data().dishes;
+                  for (
+                     let i = 0;
+                     i < updatedDishesHistory["cakes"].length;
+                     i++
+                  ) {
+                     if (
+                        updatedDishesHistory["cakes"][i].name === "Брауни кусок"
+                     ) {
+                        updatedDishesHistory["cakes"].splice(i, 1);
+                        break;
+                     }
+                  }
+
+                  db.collection("history")
+                     .doc(doc.id)
+                     .update({
+                        dishes: updatedDishesHistory
+                     })
+                     .then(() => {
+                        counter++;
+                        if (counter === 13) {
+                           console.log("Deleted");
+                        }
+                     });
+               });
+            });
+         // });
+      },
       fillHistoryTemplate: function() {
-         const dishSets = [];
+         // const dishSets = [];
+         // db.collection("dishes")
+         //    .get()
+         //    .then(querySnapshot => {
+         //       querySnapshot.forEach(doc => {
+         //          dishSets.push(doc.data());
+         //       });
+         //    })
+         //    .then(() => {
+         //       const dishes = {};
+         //       const names = [
+         //          "baklavas",
+         //          "breakfasts",
+         //          "cakes",
+         //          "cocktails",
+         //          "doners",
+         //          "drinks",
+         //          "garnirs",
+         //          "hotDrinks",
+         //          "iceCreams",
+         //          "mainDishes",
+         //          "pizzas",
+         //          "salats",
+         //          "shashlyks",
+         //          "soups",
+         //          "tandyrs"
+         //       ];
+         //       dishSets.forEach((dishSet, i) => {
+         //          dishes[names[i]] = [];
+         //          const arrayOfDishes = dishSet[names[i]];
+         //          arrayOfDishes.forEach(dish => {
+         //             dishes[names[i]].push({
+         //                name: dish.name,
+         //                costSmall: dish.costSmall,
+         //                costStand: dish.costStand,
+         //                counterSmall: 0,
+         //                counterStand: 0
+         //             });
+         //          });
+         //       });
+
          db.collection("dishes")
             .get()
-            .then(querySnapshot => {
-               querySnapshot.forEach(doc => {
-                  dishSets.push(doc.data());
+            .then(snapshot => {
+               let dishes = {};
+               snapshot.forEach(doc => {
+                  dishes[doc.id] = doc.data()[doc.id];
                });
-            })
-            .then(() => {
-               const dishes = {};
-               const names = [
-                  "baklavas",
-                  "breakfasts",
-                  "cakes",
-                  "cocktails",
-                  "doners",
-                  "drinks",
-                  "garnirs",
-                  "hotDrinks",
-                  "iceCreams",
-                  "mainDishes",
-                  "pizzas",
-                  "salats",
-                  "shashlyks",
-                  "soups",
-                  "tandyrs"
-               ];
-               dishSets.forEach((dishSet, i) => {
-                  dishes[names[i]] = [];
-                  const arrayOfDishes = dishSet[names[i]];
-                  arrayOfDishes.forEach(dish => {
-                     dishes[names[i]].push({
+               for (const dishSet in dishes) {
+                  dishes[dishSet] = dishes[dishSet].map(dish => {
+                     return {
                         name: dish.name,
                         costSmall: dish.costSmall,
                         costStand: dish.costStand,
                         counterSmall: 0,
-                        counterStand: 0
-                     });
+                        counterStand: 0,
+                        counterMoney: 0
+                     };
                   });
-               });
+               }
+               console.log(dishes);
 
                const waitersStats = [
                   {
@@ -122,6 +197,7 @@ export default {
                      console.log("success");
                   });
             });
+         // });
       },
       correctHistory() {
          db.collection("dishes")
@@ -158,23 +234,38 @@ export default {
                   waitersStats
                } = doc.data();
 
-               this.months.forEach(month => {
-                  db.collection("history")
-                     .doc(month)
-                     .set({
-                        counterMoney,
-                        deliveryMoney,
-                        discountMoney,
-                        dishes,
-                        waitersStats
-                     })
-                     .then(() => {
-                        console.log("Document successfully written!");
-                     })
-                     .catch(error => {
-                        console.error("Error writing document: ", error);
-                     });
-               });
+               // this.months.forEach(month => {
+               //    db.collection("history")
+               //       .doc(month)
+               //       .set({
+               //          counterMoney,
+               //          deliveryMoney,
+               //          discountMoney,
+               //          dishes,
+               //          waitersStats
+               //       })
+               //       .then(() => {
+               //          console.log("Document successfully written!");
+               //       })
+               //       .catch(error => {
+               //          console.error("Error writing document: ", error);
+               //       });
+               // });
+               db.collection("history")
+                  .doc("Yesterday")
+                  .set({
+                     counterMoney,
+                     deliveryMoney,
+                     discountMoney,
+                     dishes,
+                     waitersStats
+                  })
+                  .then(() => {
+                     console.log("Document successfully written!");
+                  })
+                  .catch(error => {
+                     console.error("Error writing document: ", error);
+                  });
             });
       },
       fillDishes: function() {
@@ -274,6 +365,29 @@ export default {
                //       counterTotal
                //     });
                // }
+            });
+      },
+      createDocument: function() {
+         db.collection("dishes")
+            .doc("pies")
+            .set({
+               pies: [
+                  {
+                     costSmall: 0,
+                     costStand: 2700,
+                     name: "Торт Орео",
+                     portionSmall: "(нет)",
+                     portionStand: "Киллограм"
+                  },
+                  {
+                     costSmall: 0,
+                     costStand: 2700,
+                     name: "Торт Рафаэлло",
+                     portionSmall: "(нет)",
+                     portionStand: "Киллограм"
+                  }
+               ],
+               sectionName: "Торты"
             });
       },
       postRequest: function() {

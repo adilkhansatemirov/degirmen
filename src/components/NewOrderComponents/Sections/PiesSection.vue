@@ -2,26 +2,26 @@
    <div>
       <section class="section-meals">
          <div class="container pale-red">
-            <div class="section__title color-dark-red">БАКЛАВА</div>
+            <div class="section__title color-dark-red">ТОРТЫ</div>
             <ul class="meal-group">
                <li
-                  v-for="baklava in baklavas"
-                  :key="baklava.key"
+                  v-for="pie in pies"
+                  :key="pie.key"
                   class="meal-item color-dark-red"
                >
-                  <h4>{{ baklava.name }}</h4>
+                  <h4>{{ pie.name }}</h4>
                   <div class="portion-size-choise-box">
                      <a
-                        v-if="baklava.costSmall != 0"
+                        v-if="pie.costSmall != 0"
                         class="portion__option"
-                        @click="addToBasket(baklava, baklava.costSmall)"
+                        @click="addToBasket(pie, pie.costSmall)"
                      >
                         <div class="portion__size-price">
                            <div class="portion__size">
-                              {{ baklava.portionSmall }}
+                              {{ pie.portionSmall }}
                            </div>
                            <div class="portion__price">
-                              {{ baklava.costSmall }}₸
+                              {{ pie.costSmall }}₸
                            </div>
                         </div>
                         <div class="basket-icon">
@@ -30,14 +30,14 @@
                      </a>
                      <a
                         class="portion__option"
-                        @click="addToBasketFloatAmount(baklava)"
+                        @click="addToBasketFloatAmount(pie)"
                      >
                         <div class="portion__size-price">
                            <div class="portion__size">
-                              {{ baklava.portionStand }}
+                              {{ pie.portionStand }}
                            </div>
                            <div class="portion__price">
-                              {{ baklava.costStand }}₸
+                              {{ pie.costStand }}₸
                            </div>
                         </div>
                         <div class="basket-icon">
@@ -57,39 +57,39 @@ import db from "../../../firebase/firebase-init";
 
 export default {
    computed: {
-      baklavas() {
-         return this.$store.state.dishes.dishes.baklavas;
+      pies() {
+         return this.$store.state.dishes.dishes.pies;
       }
    },
    methods: {
-      addToBasket: function(baklava, cost) {
+      addToBasket: function(pie, cost) {
          //set name and cost to work with
-         const baklavaToSend = { ...baklava };
-         baklavaToSend.nameDefault = baklava.name;
-         if (baklavaToSend.costSmall != 0) {
-            if (cost == baklava.costSmall) {
-               baklavaToSend.name += ` (${baklavaToSend.portionSmall.toLowerCase()})`;
-               baklavaToSend.cost = baklavaToSend.costSmall;
+         const pieToSend = { ...pie };
+         pieToSend.nameDefault = pie.name;
+         if (pieToSend.costSmall != 0) {
+            if (cost == pie.costSmall) {
+               pieToSend.name += ` (${pieToSend.portionSmall.toLowerCase()})`;
+               pieToSend.cost = pieToSend.costSmall;
             } else {
-               baklavaToSend.name += ` (${baklavaToSend.portionStand.toLowerCase()})`;
-               baklavaToSend.cost = baklavaToSend.costStand;
+               pieToSend.name += ` (${pieToSend.portionStand.toLowerCase()})`;
+               pieToSend.cost = pieToSend.costStand;
             }
          } else {
-            baklavaToSend.cost = baklavaToSend.costStand;
+            pieToSend.cost = pieToSend.costStand;
          }
-         this.$emit("addToBasket", baklavaToSend);
+         this.$emit("addToBasket", pieToSend);
       },
-      addToBasketFloatAmount: function(baklava) {
-         const baklavaToSend = { ...baklava };
-         baklavaToSend.nameDefault = baklava.name;
-         baklavaToSend.name += " (на развес)";
-         baklavaToSend.cost = baklava.costStand;
+      addToBasketFloatAmount: function(pie) {
+         const pieToSend = { ...pie };
+         pieToSend.nameDefault = pie.name;
+         pieToSend.name += " (на развес)";
+         pieToSend.cost = pie.costStand;
          const amount = parseFloat(prompt("В граммах")) / 1000;
          if (!amount) {
             return;
          }
          this.$store.dispatch("addToBasketFloatAmount", {
-            dish: baklavaToSend,
+            dish: pieToSend,
             amount
          });
       }

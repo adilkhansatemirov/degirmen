@@ -41,39 +41,41 @@
                            <label :for="doner.key + 1">С сыром (+50тг)</label>
                         </div>
                      </div>
-                     <a
-                        class="portion__option"
-                        v-if="doner.costSmall !== 0"
-                        @click="addToBasket(doner, doner.costSmall)"
-                     >
-                        <div class="portion__size-price">
-                           <div class="portion__size">
-                              {{ doner.portionSmall }}
+                     <div class="portion__option--group">
+                        <a
+                           class="portion__option"
+                           v-if="doner.costSmall !== 0"
+                           @click="addToBasket(doner, doner.costSmall)"
+                        >
+                           <div class="portion__size-price">
+                              <div class="portion__size">
+                                 {{ doner.portionSmall }}
+                              </div>
+                              <div class="portion__price">
+                                 {{ doner.costSmall }}₸
+                              </div>
                            </div>
-                           <div class="portion__price">
-                              {{ doner.costSmall }}₸
+                           <div class="basket-icon">
+                              <font-awesome-icon icon="shopping-basket" />
                            </div>
-                        </div>
-                        <div class="basket-icon">
-                           <font-awesome-icon icon="shopping-basket" />
-                        </div>
-                     </a>
-                     <a
-                        class="portion__option"
-                        @click="addToBasket(doner, doner.costStand)"
-                     >
-                        <div class="portion__size-price">
-                           <div class="portion__size">
-                              {{ doner.portionStand }}
+                        </a>
+                        <a
+                           class="portion__option"
+                           @click="addToBasket(doner, doner.costStand)"
+                        >
+                           <div class="portion__size-price">
+                              <div class="portion__size">
+                                 {{ doner.portionStand }}
+                              </div>
+                              <div class="portion__price">
+                                 {{ doner.costStand }}₸
+                              </div>
                            </div>
-                           <div class="portion__price">
-                              {{ doner.costStand }}₸
+                           <div class="basket-icon">
+                              <font-awesome-icon icon="shopping-basket" />
                            </div>
-                        </div>
-                        <div class="basket-icon">
-                           <font-awesome-icon icon="shopping-basket" />
-                        </div>
-                     </a>
+                        </a>
+                     </div>
                   </div>
                </li>
             </ul>
@@ -146,17 +148,17 @@ export default {
 
 <style scoped>
 .portion-size-choise-box {
-   width: 55%;
-   margin-left: auto;
-   margin-right: 0;
-   display: flex;
-   justify-content: space-between;
-}
-.checkboxes {
-   flex: 2;
    display: flex;
    flex-direction: column;
    justify-content: space-between;
+}
+.portion__option--group {
+   display: flex;
+}
+.checkboxes {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 }
 input[type="checkbox"] {
    display: none;
@@ -188,7 +190,6 @@ input[type="checkbox"]:checked + label:before {
    text-align: center;
 }
 .comment-input {
-   font-family: "Lobster";
    border: 1px solid rgba(146, 146, 146, 0.226);
    padding: 0.1rem 0.2rem;
    border-radius: 0.2rem;
@@ -207,9 +208,6 @@ input[type="checkbox"]:checked + label:before {
    .checkboxes {
       flex: 1;
       margin: 0 auto;
-   }
-   .portion-size-choise-box {
-      flex-direction: column;
    }
    .portion__option {
       margin-top: 0.4rem;

@@ -35,7 +35,11 @@ export default {
       countDishes: function() {
          let counter = 0;
          for (let i = 0; i < this.basket.length; i++) {
-            counter += this.basket[i].amount;
+            if (Number.isInteger(this.basket[i].amount)) {
+               counter += this.basket[i].amount;
+            } else {
+               counter += 1;
+            }
          }
          return counter;
       }

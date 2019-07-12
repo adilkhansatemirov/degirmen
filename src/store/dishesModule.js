@@ -1,25 +1,25 @@
-import db from '../firebase/firebase-init'
+import db from "../firebase/firebase-init";
 export default {
   state: {
     dishes: {}
   },
   mutations: {
     SET_DISHES: (state, dishes) => {
-      state.dishes = dishes
+      state.dishes = dishes;
     }
   },
   actions: {
     getDishes: ({ commit }) => {
-      let dishes = {}
-      db.collection('dishes')
+      let dishes = {};
+      db.collection("dishes")
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
-            dishes[doc.id] = doc.data()[doc.id]
-          })
+            dishes[doc.id] = doc.data()[doc.id];
+          });
           for (const dishesSet in dishes) {
             dishes[dishesSet] = dishes[dishesSet].map((dish, i) => {
-              return dishesSet === 'doners'
+              return dishesSet === "doners"
                 ? {
                     ...dish,
                     key: `${dishesSet}${i}`,
@@ -30,12 +30,19 @@ export default {
                     ...dish,
                     key: `${dishesSet}${i}`,
                     type: dishesSet
-                  }
-            })
+                  };
+            });
+            function compare(a, b) {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            }
+            dishes[dishesSet].sort(compare);
           }
-          commit('SET_DISHES', dishes)
-        })
+
+          commit("SET_DISHES", dishes);
+        });
     }
   },
   getters: {}
-}
+};

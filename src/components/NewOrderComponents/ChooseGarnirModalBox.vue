@@ -32,6 +32,7 @@ import db from "../../firebase/firebase-init";
 export default {
    data() {
       return {
+         garnirsSelected: [],
          garnirName: "(без гарнира)",
          garnirCost: 0,
          garnirs: []
@@ -46,14 +47,27 @@ export default {
          ) {
             return;
          }
-         //if the same chosen second time
-         if (this.garnirName.includes(`${this.returnName(garnir)}(100гр)`)) {
-            this.garnirName = `${this.returnName(garnir)}(200гр)`;
-            //if first time
-         } else if (this.garnirName === "(без гарнира)") {
+
+         //if first time
+         if (this.garnirName === "(без гарнира)") {
             this.garnirName = `${this.returnName(garnir)}(100гр)`;
+            this.garnirsSelected.push({
+               name: garnir.name,
+               cost: garnir.costStand / 2
+            });
+         } else if (
+            //if the same chosen second time
+            this.garnirName.includes(`${this.returnName(garnir)}(100гр)`)
+         ) {
+            this.garnirName = `${this.returnName(garnir)}(200гр)`;
+            this.garnirsSelected[0].cost *= 2;
          } else {
+            //if different is selected
             this.garnirName += ` + ${this.returnName(garnir)}(100гр)`;
+            this.garnirsSelected.push({
+               name: garnir.name,
+               cost: garnir.costStand / 2
+            });
          }
          this.garnirCost += garnir.costStand / 2;
       },
@@ -69,13 +83,15 @@ export default {
       chooseGarnir: function() {
          let garnirToSend = {
             name: this.garnirName,
-            cost: this.garnirCost
+            cost: this.garnirCost,
+            selected: this.garnirsSelected
          };
          //emit the object to mainDishes component
          this.clearGarnir();
          this.$emit("chooseGarnir", garnirToSend);
       },
       clearGarnir: function() {
+         this.garnirsSelected = [];
          this.garnirName = "(без гарнира)";
          this.garnirCost = 0;
       }

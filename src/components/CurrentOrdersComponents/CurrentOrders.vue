@@ -125,6 +125,8 @@ export default {
          this.$router.push(`/update/${order.id}`);
       },
       cancelOrder: function(order) {
+         console.log(order);
+
          db.collection("currentOrders")
             .doc(order.id)
             .delete()
@@ -157,22 +159,32 @@ export default {
                let discountMoney = doc.data().discountMoney;
                let counterMoney = doc.data().counterMoney;
 
-               const updateGarnirHistory = (dish, garnirPrice) => {
-                  //dish.dish.name ==> 'Мясо с грибами с гарниром Бульгур'
-                  //we need to take 'Бульгур'
-                  const dishNameArray = dish.dish.name.split(" ");
-                  const garnirName = dishNameArray[dishNameArray.length - 1];
-                  dishes.garnirs = dishes.garnirs.map(garnir => {
-                     // garnir.name ==> Гарнир Бульгур
-                     if (garnir.name.split(" ")[1] === garnirName) {
-                        return {
-                           ...garnir,
-                           counterStand: garnir.counterStand + dish.amount,
-                           counterMoney:
-                              garnir.counterMoney + garnirPrice * dish.amount
-                        };
-                     }
-                     return garnir;
+               const updateGarnirHistory = dish => {
+                  dish.dish.garnirs.forEach(garnirOrder => {
+                     dishes.garnirs = dishes.garnirs.map(garnirHistory => {
+                        if (garnirHistory.name === garnirOrder.name) {
+                           if (garnirHistory.costSmall === garnirOrder.cost) {
+                              return {
+                                 ...garnirHistory,
+                                 counterSmall:
+                                    garnirHistory.counterSmall + dish.amount,
+                                 counterMoney:
+                                    garnirHistory.counterMoney +
+                                    garnirOrder.cost * dish.amount
+                              };
+                           } else {
+                              return {
+                                 ...garnirHistory,
+                                 counterStand:
+                                    garnirHistory.counterStand + dish.amount,
+                                 counterMoney:
+                                    garnirHistory.counterMoney +
+                                    garnirOrder.cost * dish.amount
+                              };
+                           }
+                        }
+                        return garnirHistory;
+                     });
                   });
                };
 
@@ -182,6 +194,35 @@ export default {
                   dishes[orderDish.dish.type] = dishes[orderDish.dish.type].map(
                      historyDish => {
                         if (orderDish.dish.nameDefault === historyDish.name) {
+                           if (orderDish.dish.type === "mainDishes") {
+                              updateGarnirHistory(orderDish);
+                              if (
+                                 historyDish.costSmall ===
+                                 orderDish.dish.costDefault
+                              ) {
+                                 return {
+                                    ...historyDish,
+                                    counterSmall:
+                                       historyDish.counterSmall +
+                                       orderDish.amount,
+                                    counterMoney:
+                                       historyDish.counterMoney +
+                                       orderDish.dish.costDefault *
+                                          orderDish.amount
+                                 };
+                              } else {
+                                 return {
+                                    ...historyDish,
+                                    counterStand:
+                                       historyDish.counterStand +
+                                       orderDish.amount,
+                                    counterMoney:
+                                       historyDish.counterMoney +
+                                       orderDish.dish.costDefault *
+                                          orderDish.amount
+                                 };
+                              }
+                           }
                            if (
                               //if small dish (половина)
                               orderDish.dish.name.includes(
@@ -197,13 +238,7 @@ export default {
                                     orderDish.dish.cost * orderDish.amount
                               };
                            } else {
-                              //if big dish (порция)
-                              if (orderDish.dish.name.includes("с гарниром")) {
-                                 const garnirPrice =
-                                    orderDish.dish.cost -
-                                    orderDish.dish.costStand;
-                                 updateGarnirHistory(orderDish, garnirPrice);
-                              }
+                              //if any other dish except mainDish
                               return {
                                  ...historyDish,
                                  counterStand:
@@ -339,25 +374,33 @@ export default {
 
             this.orders = [];
             querySnapshot.forEach(doc => {
-               const order = {
+               let order = {
+                  ...doc.data(),
                   id: doc.id,
-                  dishes: doc.data().dishes,
-                  time: doc.data().time.toDate(),
-                  type: doc.data().type,
-                  total: doc.data().total
+                  time: doc.data().time.toDate()
                };
 
-               if (doc.data().type == "Доставка") {
-                  order.address = doc.data().address;
-               } else if (doc.data().type == "Кафе") {
-                  if (!doc.data().takeaway) {
-                     order.waiterName = doc.data().waiterName;
-                     order.table = doc.data().table;
-                  } else {
-                     order.takeaway = doc.data().takeaway; //true
-                  }
-                  order.discount = doc.data().discount;
-               }
+               // console.log(doc.data());
+
+               // const order = {
+               //    id: doc.id,
+               //    dishes: doc.data().dishes,
+               //    time: doc.data().time.toDate(),
+               //    type: doc.data().type,
+               //    total: doc.data().total
+               // };
+
+               // if (doc.data().type == "Доставка") {
+               //    order.address = doc.data().address;
+               //    order.phoneNumber = doc.data().phoneNumber;
+               // } else if (doc.data().type == "Кафе") {
+               //    if (!doc.data().takeaway) {
+               //       order.waiterName = doc.data().waiterName;
+               //       order.table = doc.data().table;
+               //    }
+               //    order.takeaway = doc.data().takeaway;
+               //    order.discount = doc.data().discount;
+               // }
 
                this.orders.push(order);
             });
