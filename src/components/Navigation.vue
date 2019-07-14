@@ -66,7 +66,6 @@ export default {
       // the basket stays filled, so we clear it
       pushToMenu: function() {
          this.$store.dispatch("setBasket", []);
-         this.$store.dispatch("setSecondBasket", []);
          this.$router.push("/");
       }
    }

@@ -65,6 +65,9 @@
       <div id="drinks"></div>
       <v-drinks @addToBasket="addToBasket($event)"></v-drinks>
 
+      <div id="others"></div>
+      <v-others @addToBasket="addToBasket($event)"></v-others>
+
       <v-basket-button ref="basket"></v-basket-button>
       <v-basket-modal-box
          @addToBasket="addToBasket($event)"
@@ -96,6 +99,7 @@ import CookiesSection from "./Sections/CookiesSection.vue";
 import BakerysSection from "./Sections/BakerysSection.vue";
 import BreadsSection from "./Sections/BreadsSection.vue";
 import PiesSection from "./Sections/PiesSection.vue";
+import OthersSection from "./Sections/OthersSection.vue";
 
 import BasketButton from "./BasketComponents/BasketButton.vue";
 import BasketModalBox from "./BasketComponents/BasketModalBox.vue";
@@ -126,6 +130,7 @@ export default {
       "v-bakerys": BakerysSection,
       "v-breads": BreadsSection,
       "v-pies": PiesSection,
+      "v-others": OthersSection,
 
       "v-basket-button": BasketButton,
       "v-basket-modal-box": BasketModalBox
@@ -141,9 +146,6 @@ export default {
    methods: {
       addToBasket: function(dish) {
          this.$store.dispatch("addToBasket", dish);
-         if (!this.newOrder()) {
-            this.$store.dispatch("addToSecondBasket", dish);
-         }
          this.$refs.basket.spinBasket();
       },
       openBasket() {

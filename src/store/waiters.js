@@ -24,7 +24,7 @@ export default {
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
-            if (doc.data().status === "Офицант") {
+            if (doc.data().status === "Официант") {
               waitersList.push(doc.data());
             }
           });
@@ -73,7 +73,7 @@ export default {
             .set({
               email: waiter.email,
               name: waiter.name,
-              status: "Офицант",
+              status: "Официант",
               uid: newWaiter.user.uid
             });
 

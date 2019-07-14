@@ -39,6 +39,7 @@ export default {
       context.commit("CLOSE_NEW_DISH_MODAL");
     },
     createDish: (context, newDish) => {
+      context.commit("SET_UPDATING", true);
       context.commit("CLOSE_NEW_DISH_MODAL");
 
       // CREATE IN DISHES COLLECTION
@@ -79,7 +80,8 @@ export default {
                       .then(() => {
                         counter++;
                         if (counter === 13) {
-                          console.log("Success");
+                          alert("Изменения сохранены, спасибо за терпение");
+                          context.commit("SET_UPDATING", false);
                         }
                       })
                       .catch(() => {
@@ -157,8 +159,8 @@ export default {
                       .then(() => {
                         counter++;
                         if (counter === 13) {
+                          alert("Изменения сохранены, спасибо за терпение");
                           context.commit("SET_UPDATING", false);
-                          console.log("success");
                         }
                       })
                       .catch(() => {
@@ -172,6 +174,7 @@ export default {
         });
     },
     deleteDish: (context, dish) => {
+      context.commit("SET_UPDATING", true);
       db.collection("dishes")
         .doc(dish.type)
         .get()
@@ -217,8 +220,14 @@ export default {
                       .then(() => {
                         counter++;
                         if (counter === 13) {
-                          console.log("Deleted");
+                          alert("Изменения сохранены, спасибо за терпение");
+                          context.commit("SET_UPDATING", false);
                         }
+                      })
+                      .catch(() => {
+                        alert(
+                          "Возникла проблема. Проверьте интернет соединение.."
+                        );
                       });
                   });
                 });

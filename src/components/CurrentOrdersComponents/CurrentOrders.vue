@@ -125,13 +125,14 @@ export default {
          this.$router.push(`/update/${order.id}`);
       },
       cancelOrder: function(order) {
-         console.log(order);
-
          db.collection("currentOrders")
             .doc(order.id)
             .delete()
             .then(() => {
                console.log("Document successfully deleted!");
+            })
+            .catch(err => {
+               console.log(err);
             });
       },
       showOrderActions: function(order) {
@@ -142,9 +143,10 @@ export default {
          return order.waiterName === this.waiterName;
       },
       archiveOrder: function(order) {
-         this.passwordInput = "";
+         // this.passwordInput = "";
          this.updateHistory(order, "Today");
-         // this.updateHistory(order, this.getMonth(order));
+         this.updateHistory(order, this.getMonth(order));
+         this.$store.dispatch("saveOrderToCheckHistory", order);
          this.cancelOrder(order);
       },
       updateHistory: function(order, time) {
@@ -260,7 +262,8 @@ export default {
                      if (waiter.name === order.waiterName) {
                         return {
                            ...waiter,
-                           counterMoney: waiter.counterMoney + service(order),
+                           counterMoney:
+                              waiter.counterMoney + service(order) / 2,
                            counterOrders: waiter.counterOrders + 1
                         };
                      }
@@ -294,6 +297,8 @@ export default {
          if (this.loading) {
             return;
          }
+
+         this.$store.dispatch("clearHistoryChecks");
 
          db.collection("history")
             .doc("Today")
@@ -409,7 +414,7 @@ export default {
    computed: {
       adminMode() {
          if (this.$store.state.auth.user) {
-            return this.$store.state.auth.user.status !== "Офицант";
+            return this.$store.state.auth.user.status !== "Официант";
          } else return false;
       },
       waiterName() {
@@ -428,7 +433,7 @@ export default {
 }
 .title {
    text-align: center;
-   color: #4e0000;
+   color: #640101;
    font-weight: lighter;
    font-size: 1.7rem;
    margin: 0.5rem 0;
@@ -436,7 +441,7 @@ export default {
 .order-item {
    color: #6b0606;
    border: 2px solid #af3d3d;
-   background: #ffd5d5;
+   background: #ffe2e2;
    border-radius: 0.2rem;
    margin-bottom: 1.5rem;
    position: relative;
@@ -445,7 +450,7 @@ export default {
 .order-header {
    display: flex;
    justify-content: space-between;
-   background: #a02a2a;
+   background: #b42b2b;
    color: #ffffff;
    padding: 0 0.4rem;
    align-items: center;
@@ -515,7 +520,7 @@ export default {
    padding: 0.3rem;
    flex: 2;
    border-radius: 0.3rem 0rem 0rem 0.3rem;
-   background: #941f1f;
+   background: #af3d3d;
    color: #ffeaea;
 }
 .unlock-save-order-input {

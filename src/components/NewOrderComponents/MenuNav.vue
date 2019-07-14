@@ -8,58 +8,78 @@
          </span>
 
          <div class="logo" @click="scroll()">Cafe</div>
-
-         <div ref="slideMenu" class="side-nav">
-            <a class="btn-close" @click="closeSlideMenu()">
-               <font-awesome-icon icon="times" />
-            </a>
-            <a href="#soups" @click="jumpTo('#soups')" class="link">Супы</a>
-            <a href="#mainDishes" @click="jumpTo('#mainDishes')" class="link">
-               Горячие
-               <br />блюда
-            </a>
-            <a href="#doners" @click="jumpTo('#doners')" class="link">Донер</a>
-            <a href="#pizzas" @click="jumpTo('#pizzas')" class="link">Пицца</a>
-            <a href="#drinks" @click="jumpTo('#drinks')" class="link"
-               >Напитки</a
-            >
-            <a href="#hotDrinks" @click="jumpTo('#hotDrinks')" class="link">
-               Горячие
-               <br />напитки
-            </a>
-            <a href="#garnirs" @click="jumpTo('#garnirs')" class="link"
-               >Гарниры</a
-            >
-            <a href="#salats" @click="jumpTo('#salats')" class="link">Салаты</a>
-            <a href="#shashlyks" @click="jumpTo('#shashlyks')" class="link"
-               >Шашлыки</a
-            >
-            <a href="#breakfasts" @click="jumpTo('#breakfasts')" class="link"
-               >Завтраки</a
-            >
-            <a href="#tandyrs" @click="jumpTo('#tandyrs')" class="link"
-               >Тандыр</a
-            >
-            <a href="#cakes" @click="jumpTo('#cakes')" class="link"
-               >Пироженые</a
-            >
-            <a href="#baklavas" @click="jumpTo('#baklavas')" class="link"
-               >Баклава</a
-            >
-            <a href="#coockies" @click="jumpTo('#coockies')" class="link"
-               >Печенье</a
-            >
-            <a href="#breads" @click="jumpTo('#breads')" class="link">Хлеб</a>
-            <a href="#bakerys" @click="jumpTo('#bakerys')" class="link"
-               >Выпечка</a
-            >
-            <a href="#pies" @click="jumpTo('#pies')" class="link">Торты</a>
-            <a href="#iceCreams" @click="jumpTo('#iceCreams')" class="link"
-               >Мороженое</a
-            >
-            <a href="#cocktails" @click="jumpTo('#cocktails')" class="link"
-               >Коктейли</a
-            >
+         <div
+            class="slideMenu__background"
+            ref="menuBackground"
+            @click="closeSlideMenu()"
+         >
+            <div ref="slideMenu" class="side-nav">
+               <a class="btn-close" @click="closeSlideMenu()">
+                  <font-awesome-icon icon="times" />
+               </a>
+               <a href="#soups" @click="jumpTo('#soups')" class="link">Супы</a>
+               <a
+                  href="#mainDishes"
+                  @click="jumpTo('#mainDishes')"
+                  class="link"
+               >
+                  Горячие
+                  <br />блюда
+               </a>
+               <a href="#doners" @click="jumpTo('#doners')" class="link"
+                  >Донер</a
+               >
+               <a href="#pizzas" @click="jumpTo('#pizzas')" class="link"
+                  >Пицца</a
+               >
+               <a href="#drinks" @click="jumpTo('#drinks')" class="link"
+                  >Напитки</a
+               >
+               <a href="#hotDrinks" @click="jumpTo('#hotDrinks')" class="link">
+                  Горячие
+                  <br />напитки
+               </a>
+               <a href="#garnirs" @click="jumpTo('#garnirs')" class="link"
+                  >Гарниры</a
+               >
+               <a href="#salats" @click="jumpTo('#salats')" class="link"
+                  >Салаты</a
+               >
+               <a href="#shashlyks" @click="jumpTo('#shashlyks')" class="link"
+                  >Шашлыки</a
+               >
+               <a href="#breakfasts" @click="jumpTo('#breakfasts')" class="link"
+                  >Завтраки</a
+               >
+               <a href="#tandyrs" @click="jumpTo('#tandyrs')" class="link"
+                  >Тандыр</a
+               >
+               <a href="#cakes" @click="jumpTo('#cakes')" class="link"
+                  >Пироженые</a
+               >
+               <a href="#baklavas" @click="jumpTo('#baklavas')" class="link"
+                  >Баклава</a
+               >
+               <a href="#coockies" @click="jumpTo('#coockies')" class="link"
+                  >Печенье</a
+               >
+               <a href="#breads" @click="jumpTo('#breads')" class="link"
+                  >Хлеб</a
+               >
+               <a href="#bakerys" @click="jumpTo('#bakerys')" class="link"
+                  >Выпечка</a
+               >
+               <a href="#pies" @click="jumpTo('#pies')" class="link">Торты</a>
+               <a href="#iceCreams" @click="jumpTo('#iceCreams')" class="link"
+                  >Мороженое</a
+               >
+               <a href="#cocktails" @click="jumpTo('#cocktails')" class="link"
+                  >Коктейли</a
+               >
+               <a href="#others" @click="jumpTo('#others')" class="link"
+                  >Другое</a
+               >
+            </div>
          </div>
       </nav>
    </div>
@@ -79,16 +99,20 @@ export default {
    },
    methods: {
       openSlideMenu: function() {
+         this.$refs.menuBackground.style.opacity = "1";
+         this.$refs.menuBackground.style.pointerEvents = "all";
          this.$refs.slideMenu.style.width = "200px";
          this.menuClosed = false;
       },
       closeSlideMenu: function() {
+         this.$refs.menuBackground.style.opacity = "0";
+         this.$refs.menuBackground.style.pointerEvents = "none";
          this.$refs.slideMenu.style.width = "0px";
          this.menuClosed = true;
       },
       jumpTo: function(target) {
          // jump(target, {
-         //   duration: 300
+         //    duration: 300
          // });
          this.closeSlideMenu();
       }
@@ -97,6 +121,18 @@ export default {
 </script>
 
 <style scoped>
+.slideMenu__background {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0.4);
+   z-index: 1;
+   pointer-events: none;
+   opacity: 0;
+   transition: all 0.3s;
+}
 nav {
    background-color: #d23837;
    display: flex;
@@ -144,7 +180,7 @@ nav .logo {
    background-color: #9a2928;
    opacity: 0.95;
    overflow-x: hidden;
-   transition: 0.3s;
+   transition: all 0.3s;
 }
 .side-nav .link,
 .side-nav a:last-child {

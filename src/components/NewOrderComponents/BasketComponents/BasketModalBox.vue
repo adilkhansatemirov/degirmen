@@ -96,35 +96,13 @@
                            {{ dish.amount * dish.dish.cost }}
                         </p>
                      </li>
+                     <div class="dish-total" v-if="basket.length !== 0">
+                        Итого: {{ countTotal() }}
+                     </div>
                   </ul>
-                  <div v-if="!newOrder()">
-                     <h3>Дозаказ</h3>
-                     <ul class="dish-list">
-                        <li
-                           class="dish-item"
-                           v-for="dish in secondBasket"
-                           :key="dish.key"
-                        >
-                           <p class="dish-name">{{ dish.dish.name }}</p>
-                           <p class="dish-cost">{{ dish.dish.cost }}</p>
-                           <p class="dish-amount">
-                              <span @click="amountChange(dish, -1)">
-                                 <font-awesome-icon icon="minus" />
-                              </span>
-                              {{ dish.amount }}
-                              <span @click="amountChange(dish, 1)">
-                                 <font-awesome-icon icon="plus" />
-                              </span>
-                           </p>
-                           <p class="dish-total">
-                              {{ dish.amount * dish.dish.cost }}
-                           </p>
-                        </li>
-                     </ul>
-                  </div>
                   <button
                      v-if="basket.length !== 0"
-                     class="clear-basket"
+                     class="button clear-basket"
                      @click="clearBasket()"
                   >
                      Очистить корзину
@@ -148,7 +126,7 @@
                   <form @submit.prevent="saveOrder()" class="cafe-form">
                      <div v-if="!takeaway">
                         <div class="waiter-name">
-                           <label for="waiter-name">Имя офицанта</label>
+                           <label for="waiter-name">Имя официанта</label>
                            <select
                               v-if="adminMode"
                               v-model="waiterName"
@@ -175,7 +153,7 @@
                            <input
                               type="number"
                               min="1"
-                              max="24"
+                              max="25"
                               ref="table"
                               name="table"
                               id="table"
@@ -238,9 +216,6 @@ export default {
       },
       basket() {
          return this.$store.state.basket.basket;
-      },
-      secondBasket() {
-         return this.$store.state.basket.secondBasket;
       }
    },
    methods: {
@@ -261,7 +236,7 @@ export default {
          if (number === 1) {
             this.$store.dispatch("addToBasket", dish.dish);
          } else {
-            //delete dish in both baskets
+            //delete dish in basket
             this.$store.dispatch("decreaseAmount", dish.dish);
          }
       },
@@ -291,7 +266,6 @@ export default {
             time: new Date(),
             total: this.countTotal(),
             dishes: this.basket,
-            additionalDishes: this.secondBasket,
             destination: "KITCHEN"
          };
          if (this.position == "delivery") {
@@ -461,6 +435,7 @@ button {
 }
 /* Main slide */
 .clear-basket {
+   padding: 0 0.3rem;
    position: absolute;
    bottom: 1rem;
    left: 50%;

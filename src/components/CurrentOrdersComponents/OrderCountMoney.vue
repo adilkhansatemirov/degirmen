@@ -11,20 +11,7 @@
       </div>
       <p v-else class="order-total">Доставка: 300</p>
 
-      <p class="order-total">
-         <span class="print-button" @click="printRequest(order, 'KITCHEN')">
-            <span>На кухню</span>
-            <font-awesome-icon icon="print" />
-         </span>
-         <span
-            class="print-button"
-            @click="printRequest(order, 'CASHIER_TABLE')"
-         >
-            <span>На кассу</span>
-            <font-awesome-icon icon="print" />
-         </span>
-         К оплате: {{ toPay(order) }}
-      </p>
+      <p class="order-total">К оплате: {{ toPay(order) }}</p>
    </div>
 </template>
 
@@ -61,25 +48,6 @@ export default {
          } else {
             return order.total + 300;
          }
-      },
-      printRequest: function(order, destination) {
-         order.destination = destination;
-         const data = {
-            order
-         };
-         const config = {
-            responseType: "text"
-         };
-         axios
-            // .post("/test/index.php", data, config)
-            .post("/print/example/interface/ethernet.php", data, config)
-            .then(response => {
-               console.log(response);
-               console.log("Responce was handled.");
-            })
-            .catch(error => {
-               console.log(error);
-            });
       }
    }
 };
@@ -88,16 +56,5 @@ export default {
 <style scoped>
 .order-total {
    text-align: right;
-}
-.print-button {
-   font-size: 1.1rem;
-   border: 1px solid rgb(124, 53, 53);
-   border-radius: 0.5rem;
-   padding: 0 0.2rem;
-   margin-right: 1rem;
-   cursor: pointer;
-}
-.print-button:hover {
-   color: rgb(155, 67, 67);
 }
 </style>

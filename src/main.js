@@ -70,10 +70,12 @@ import { faHamburger } from "@fortawesome/free-solid-svg-icons";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 
 import { faShoppingBasket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+library.add(faClipboardList);
 library.add(faCoffee);
 library.add(faBars);
 library.add(faUser);

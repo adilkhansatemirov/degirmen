@@ -1,7 +1,7 @@
 <template>
    <div class="modal-background" @click="closeNewWaiterModal($event)">
       <div class="modal-container">
-         <h3 class="modal-header">Новый офицант</h3>
+         <h3 class="modal-header">Новый официант</h3>
          <form @submit.prevent="createNewWaiter()">
             <div class="input-item">
                <label for="waiter-name">Имя</label>

@@ -46,16 +46,6 @@
                   >
                </div>
                <div class="input-item">
-                  <label for="dishCostStand">Цена большой порции</label>
-                  <input
-                     type="number"
-                     name="dishCostStand"
-                     id="dishCostStand"
-                     :value="dishToUpdate.costStand"
-                     ref="dishCostStand"
-                  />
-               </div>
-               <div class="input-item">
                   <label for="dishPortionStand">Название большой порции</label>
                   <input
                      type="text"
@@ -63,6 +53,16 @@
                      id="dishPortionStand"
                      :value="dishToUpdate.portionStand"
                      ref="dishPortionStand"
+                  />
+               </div>
+               <div class="input-item">
+                  <label for="dishCostStand">Цена большой порции</label>
+                  <input
+                     type="number"
+                     name="dishCostStand"
+                     id="dishCostStand"
+                     :value="dishToUpdate.costStand"
+                     ref="dishCostStand"
                   />
                </div>
                <div class="button-group">
@@ -99,17 +99,21 @@ export default {
    methods: {
       updateDish: function() {
          const updatedName = this.$refs.dishName.value;
+         const updatedPortionSmall = this.$refs.dishPortionSmall.value;
+         const updatedPortionStand = this.$refs.dishPortionStand.value;
          const updatedCostSmall = parseInt(this.$refs.dishCostSmall.value);
          const updatedCostStand = parseInt(this.$refs.dishCostStand.value);
 
-         // if (
-         //    updatedName === this.dishToUpdate.name &&
-         //    updatedCostSmall === this.dishToUpdate.costSmall &&
-         //    updatedCostStand === this.dishToUpdate.costStand
-         // ) {
-         //    alert("Блюдо не изменено");
-         //    return;
-         // }
+         if (
+            updatedName === this.dishToUpdate.name &&
+            updatedPortionSmall === this.dishToUpdate.portionSmall &&
+            updatedPortionStand === this.dishToUpdate.portionStand &&
+            updatedCostSmall === this.dishToUpdate.costSmall &&
+            updatedCostStand === this.dishToUpdate.costStand
+         ) {
+            alert("Блюдо не изменено");
+            return;
+         }
          const updatedDish = {
             ...this.dishToUpdate,
             oldName: this.dishToUpdate.name,

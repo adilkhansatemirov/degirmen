@@ -2,20 +2,22 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // Modules
-import authModule from "./authModule";
-import basketModule from "./basketModule";
-import waitersModule from "./waitersModule";
-import dishesModule from "./dishesModule";
+import auth from "./auth";
+import basket from "./basket";
+import waiters from "./waiters";
+import dishes from "./dishes";
+import orders from "./orders";
 import updateDishesModule from "./updateDishesModule";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    auth: authModule,
-    basket: basketModule,
-    waiters: waitersModule,
-    dishes: dishesModule,
+    auth: auth,
+    basket: basket,
+    waiters: waiters,
+    dishes: dishes,
+    orders: orders,
     updateDishes: updateDishesModule
   }
 });

@@ -4,7 +4,7 @@
       <!-- <input v-model="text" type="text" placeholder="text"> -->
       <!-- <button @click.prevent="postRequest()">post data</button> -->
       <!-- <button @click="fillHistory()">Fill history</button> -->
-      <button @click="deleteDish()">BUTTON</button>
+      <button>BUTTON</button>
    </div>
 </template>
 
@@ -268,48 +268,6 @@ export default {
                   });
             });
       },
-      fillDishes: function() {
-         db.collection("dishes")
-            .doc("iceCreams")
-            .get()
-            .then(doc => {
-               let names = [
-                  "Сливочное",
-                  "Клубничное",
-                  "Вишневое",
-                  "Шоколадное",
-                  "Киви",
-                  "Банановое",
-                  "Фисташковое",
-                  "Сливочное мараш"
-               ];
-
-               let iceCreams = [];
-               names.forEach(name => {
-                  iceCreams.push({
-                     name,
-                     costSmall: 0,
-                     costStand: 200,
-                     portionSmall: "Половина",
-                     portionStand: "Порция",
-                     type: "Мороженое"
-                  });
-               });
-               console.log(iceCreams);
-
-               db.collection("dishes")
-                  .doc("iceCreams")
-                  .set({
-                     iceCreams
-                  })
-                  .then(() => {
-                     console.log("Written");
-                  })
-                  .catch(error => {
-                     console.log(error.response);
-                  });
-            });
-      },
       clearHistory: function() {
          db.collection("history")
             .doc("Today")
@@ -369,25 +327,62 @@ export default {
       },
       createDocument: function() {
          db.collection("dishes")
-            .doc("pies")
+            .doc("others")
             .set({
-               pies: [
+               others: [
                   {
-                     costSmall: 0,
-                     costStand: 2700,
-                     name: "Торт Орео",
-                     portionSmall: "(нет)",
-                     portionStand: "Киллограм"
+                     costSmall: 200,
+                     costStand: 300,
+                     name: "Свечи",
+                     portionSmall: "10 шт",
+                     portionStand: "20 шт"
                   },
                   {
                      costSmall: 0,
-                     costStand: 2700,
-                     name: "Торт Рафаэлло",
+                     costStand: 100,
+                     name: "Леденец",
                      portionSmall: "(нет)",
-                     portionStand: "Киллограм"
+                     portionStand: "Штука"
                   }
                ],
-               sectionName: "Торты"
+               sectionName: "Другое"
+            });
+      },
+      createDocument2: function() {
+         let counter = 0;
+         db.collection("history")
+            .get()
+            .then(snapshot => {
+               snapshot.forEach(doc => {
+                  const updatedHistory = {
+                     ...doc.data().dishes,
+                     others: [
+                        {
+                           costSmall: 200,
+                           costStand: 300,
+                           name: "Свечи",
+                           portionSmall: "10 шт",
+                           portionStand: "20 шт"
+                        },
+                        {
+                           costSmall: 0,
+                           costStand: 100,
+                           name: "Леденец",
+                           portionSmall: "(нет)",
+                           portionStand: "Штука"
+                        }
+                     ]
+                  };
+
+                  db.collection("history")
+                     .doc(doc.id)
+                     .update({
+                        dishes: updatedHistory
+                     })
+                     .then(() => {
+                        console.log(counter++);
+                     });
+               });
             });
       },
       postRequest: function() {

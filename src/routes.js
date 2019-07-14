@@ -1,5 +1,6 @@
 import NewOrder from "./components/NewOrderComponents/NewOrder.vue";
 import CurrentOrders from "./components/CurrentOrdersComponents/CurrentOrders.vue";
+import HistoryChecks from "./components/CurrentOrdersComponents/HistoryChecks.vue";
 import Admin from "./components/AdminComponents/Admin.vue";
 import Login from "./components/LoginComponents/Login.vue";
 import ControlPannel from "./components/UserComponents/ControlPannel.vue";
@@ -26,6 +27,11 @@ export default [
   {
     path: "/controlPannel",
     component: ControlPannel,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/historyChecks",
+    component: HistoryChecks,
     meta: { requiresAuth: true }
   },
   {

@@ -139,12 +139,20 @@
          :portionStand="'1л'"
       ></v-dishes-group>
 
+      <!-- OTHERS -->
+      <v-dishes-group
+         :dishes="others"
+         :sectionName="'Другое'"
+         :portionSmall="'Большая'"
+         :portionStand="'Маленькая'"
+      ></v-dishes-group>
+
       <!-- MONEY STATISTICS -->
       <div class="total-money-list">
          <p>Общая сумма с блюд: {{ counterMoney }}</p>
          <p>Сумма сделанных скидок: {{ discountMoney }}</p>
          <p>Деньги за доставку: {{ deliveryMoney }}</p>
-         <p>Проценты офицантов: {{ waitersTotal }}</p>
+         <p>Обслуживание: {{ waitersTotal }}</p>
          <p>
             В кассе:
             {{ counterMoney - discountMoney + deliveryMoney + waitersTotal }}
@@ -207,6 +215,7 @@ export default {
          shashlyks: [],
          soups: [],
          tandyrs: [],
+         others: [],
          routePosition: null,
          loading: false
       };
@@ -258,6 +267,7 @@ export default {
                vm.shashlyks = doc.data().dishes.shashlyks;
                vm.soups = doc.data().dishes.soups;
                vm.tandyrs = doc.data().dishes.tandyrs;
+               vm.others = doc.data().dishes.others;
 
                vm.baklavas.sort(compare);
                vm.breakfasts.sort(compare);
@@ -278,11 +288,13 @@ export default {
                vm.shashlyks.sort(compare);
                vm.soups.sort(compare);
                vm.tandyrs.sort(compare);
+               vm.others.sort(compare);
 
                vm.loading = false;
 
+               vm.waitersTotal = 0;
                vm.waitersStats.forEach(waiter => {
-                  vm.waitersTotal += waiter.counterMoney;
+                  vm.waitersTotal += waiter.counterMoney * 2;
                });
             });
       });

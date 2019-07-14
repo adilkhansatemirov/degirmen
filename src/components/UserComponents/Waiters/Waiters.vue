@@ -1,6 +1,6 @@
 <template>
    <div class="container">
-      <h1 class="Waiters__header">Офицанты</h1>
+      <h1 class="Waiters__header">Официанты</h1>
       <ul class="Waiters__list">
          <li class="Waiters__item" v-for="waiter in waiters" :key="waiter.uid">
             <p class="Waiters__item-name">

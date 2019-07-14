@@ -211,8 +211,27 @@
          </ul>
       </div>
 
-      <div class="updating-container" v-if="updating">
-         <img class="loading" src="../../assets/loading.gif" alt="" />
+      <!-- OTHERS -->
+      <div class="UpdateDishes__dishes-view">
+         <h3 class="UpdateDishes__dishes-header">Другое</h3>
+         <ul class="UpdateDishes__dishes-list">
+            <v-dish-item
+               :dish="other"
+               v-for="other in others"
+               :key="other.id"
+            ></v-dish-item>
+         </ul>
+      </div>
+
+      <div class="UpdateDishes__updating-container" v-if="updating">
+         <img
+            class="UpdateDishes__loading"
+            src="../../assets/loading.gif"
+            alt=""
+         />
+         <p class="UpdateDishes__loading-text">
+            Изменения сохнаняются.<br />Пожалуйста не перезагужайте страницу.
+         </p>
       </div>
       <div @click="openNewDishModal()" class="UpdateDishes__new-dish-icon">
          <font-awesome-icon icon="plus" />
@@ -255,6 +274,7 @@ export default {
       cocktails: state => state.dishes.dishes.cocktails,
       drinks: state => state.dishes.dishes.drinks,
       doners: state => state.dishes.dishes.doners,
+      others: state => state.dishes.dishes.others,
 
       updating: state => state.updateDishes.updating,
       modalIsOpen: state => state.updateDishes.modalIsOpen,
@@ -315,10 +335,7 @@ export default {
    -moz-box-shadow: 4px 4px 9px 0px rgba(179, 172, 179, 1);
    box-shadow: 4px 4px 9px 0px rgba(179, 172, 179, 1);
 }
-.loading {
-   width: 3rem;
-}
-.updating-container {
+.UpdateDishes__updating-container {
    position: fixed;
    width: 100%;
    height: 100%;
@@ -328,6 +345,15 @@ export default {
    display: flex;
    justify-content: center;
    align-items: center;
+   flex-direction: column;
    z-index: 2;
+}
+.UpdateDishes__loading {
+   width: 5rem;
+}
+.UpdateDishes__loading-text {
+   font-size: 1.5rem;
+   color: #fff;
+   text-align: center;
 }
 </style>

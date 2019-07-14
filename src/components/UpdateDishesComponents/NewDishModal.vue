@@ -20,6 +20,7 @@
                      class="NewDishModal__input-input"
                      id="NewDishModal__dish-name"
                      v-model="dishName"
+                     required
                   />
                </div>
                <div class="NewDishModal__input-group">
@@ -57,7 +58,10 @@
                      >Малая порция</label
                   >
                </div>
-               <div class="NewDishModal__input-group" v-if="checkSmallPortion">
+               <div
+                  class="NewDishModal__input-group"
+                  v-show="checkSmallPortion"
+               >
                   <label
                      for="NewDishModal__dish-portion-small"
                      class="NewDishModal__input-label"
@@ -69,9 +73,13 @@
                      class="NewDishModal__input-input"
                      id="NewDishModal__dish-portion-small"
                      v-model="portionSmall"
+                     :required="checkSmallPortion ? true : false"
                   />
                </div>
-               <div class="NewDishModal__input-group" v-if="checkSmallPortion">
+               <div
+                  class="NewDishModal__input-group"
+                  v-show="checkSmallPortion"
+               >
                   <label
                      for="NewDishModal__dish-cost-small"
                      class="NewDishModal__input-label"
@@ -82,6 +90,7 @@
                      class="NewDishModal__input-input"
                      id="NewDishModal__dish-cost-small"
                      v-model.number="costSmall"
+                     :required="checkSmallPortion ? true : false"
                   />
                </div>
                <div class="NewDishModal__input-group">
@@ -96,6 +105,7 @@
                      class="NewDishModal__input-input"
                      id="NewDishModal__dish-portion-stand"
                      v-model="portionStand"
+                     required
                   />
                </div>
                <div class="NewDishModal__input-group">
@@ -109,6 +119,7 @@
                      class="NewDishModal__input-input"
                      id="NewDishModal__dish-cost-stand"
                      v-model.number="costStand"
+                     required
                   />
                </div>
                <div class="button-group">
@@ -143,6 +154,22 @@ export default {
          costStand: 0,
          typesMap: [
             {
+               nameRus: "Суп",
+               nameEng: "soups"
+            },
+            {
+               nameRus: "Горячее блюдо",
+               nameEng: "mainDishes"
+            },
+            {
+               nameRus: "Донер",
+               nameEng: "doners"
+            },
+            {
+               nameRus: "Пицца",
+               nameEng: "pizzas"
+            },
+            {
                nameRus: "Выпечка",
                nameEng: "bakerys"
             },
@@ -171,10 +198,6 @@ export default {
                nameEng: "coockies"
             },
             {
-               nameRus: "Донер",
-               nameEng: "doners"
-            },
-            {
                nameRus: "Холодный напиток",
                nameEng: "drinks"
             },
@@ -191,16 +214,8 @@ export default {
                nameEng: "iceCreams"
             },
             {
-               nameRus: "Горячее блюдо",
-               nameEng: "mainDishes"
-            },
-            {
                nameRus: "Торты",
                nameEng: "pies"
-            },
-            {
-               nameRus: "Пицца",
-               nameEng: "pizzas"
             },
             {
                nameRus: "Салат",
@@ -211,12 +226,12 @@ export default {
                nameEng: "shashlyks"
             },
             {
-               nameRus: "Суп",
-               nameEng: "soups"
-            },
-            {
                nameRus: "Тандыр",
                nameEng: "tandyrs"
+            },
+            {
+               nameRus: "Другое",
+               nameEng: "others"
             }
          ]
       };

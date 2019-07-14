@@ -17,8 +17,12 @@
                   <p>Настроить блюда</p>
                   <font-awesome-icon icon="hamburger" />
                </div>
+               <div class="link" @click="redirect('/historyChecks')">
+                  <p>История чеков</p>
+                  <font-awesome-icon icon="clipboard-list" />
+               </div>
                <div class="link" @click="redirect('/waiters')" v-if="adminMode">
-                  <p>Офицанты</p>
+                  <p>Официанты</p>
                   <font-awesome-icon icon="users" />
                </div>
                <div class="link" @click="logout()">
@@ -54,7 +58,7 @@ export default {
          return this.$store.getters.getCurrentUser;
       },
       adminMode() {
-         return this.user.status !== "Офицант";
+         return this.user.status !== "Официант";
       }
    }
 };
