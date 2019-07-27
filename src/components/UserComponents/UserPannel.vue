@@ -43,7 +43,6 @@ export default {
       },
       redirect: function(path) {
          this.$router.push(path);
-         this.$store.dispatch("setBasket", []);
          this.$emit("closeUserPannel");
       },
       closeUserPannel: function(event, close) {

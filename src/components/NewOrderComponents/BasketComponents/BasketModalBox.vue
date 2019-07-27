@@ -100,6 +100,44 @@
                         Итого: {{ countTotal() }}
                      </div>
                   </ul>
+                  <div class="change-order-container" v-if="!newOrder()">
+                     <h4 class="change-order__header">
+                        Дозаказ
+                        <button class="button change-order__print-button" v-if="secondBasket.length !== 0" @click="printRequest()">
+                           На кухню<font-awesome-icon
+                              icon="print"
+                           ></font-awesome-icon>
+                        </button>
+                     </h4>
+                     <ul>
+                        <li
+                           class="dish-item"
+                           v-for="dish in secondBasket"
+                           :key="dish.key"
+                        >
+                           <p class="dish-name">{{ dish.dish.name }}</p>
+                           <p class="dish-cost">{{ dish.dish.cost }}</p>
+                           <p class="dish-amount">
+                              <span
+                                 @click="amountChange(dish, -1)"
+                                 v-if="isInt(dish.amount)"
+                              >
+                                 <font-awesome-icon icon="minus" />
+                              </span>
+                              {{ dish.amount }}
+                              <span
+                                 @click="amountChange(dish, 1)"
+                                 v-if="isInt(dish.amount)"
+                              >
+                                 <font-awesome-icon icon="plus" />
+                              </span>
+                           </p>
+                           <p class="dish-total">
+                              {{ dish.amount * dish.dish.cost }}
+                           </p>
+                        </li>
+                     </ul>
+                  </div>
                   <button
                      v-if="basket.length !== 0"
                      class="button clear-basket"
@@ -216,6 +254,9 @@ export default {
       },
       basket() {
          return this.$store.state.basket.basket;
+      },
+      secondBasket() {
+         return this.$store.state.basket.secondBasket;
       }
    },
    methods: {
@@ -235,6 +276,9 @@ export default {
          //if plus is pressed
          if (number === 1) {
             this.$store.dispatch("addToBasket", dish.dish);
+            if (!this.newOrder()) {
+               this.$store.dispatch("addToSecondBasket", dish.dish);
+            }
          } else {
             //delete dish in basket
             this.$store.dispatch("decreaseAmount", dish.dish);
@@ -262,26 +306,7 @@ export default {
          this.position = null;
       },
       saveOrder: function() {
-         const orderToPost = {
-            time: new Date(),
-            total: this.countTotal(),
-            dishes: this.basket,
-            destination: "KITCHEN"
-         };
-         if (this.position == "delivery") {
-            orderToPost.address = this.$refs.address.value;
-            orderToPost.phoneNumber = this.$refs.phoneNumber.value;
-            orderToPost.type = "Доставка";
-         } else if (this.position == "cafe") {
-            if (!this.takeaway) {
-               orderToPost.waiterName = this.waiterName;
-               orderToPost.table = this.$refs.table.value;
-            }
-            orderToPost.discount = this.$refs.discount.value;
-            orderToPost.type = "Кафе";
-         }
-         orderToPost.takeaway = this.takeaway;
-
+         const orderToPost = compileOrder();
          if (this.newOrder()) {
             //if new order
             db.collection("currentOrders")
@@ -299,9 +324,35 @@ export default {
                });
          }
          // this.printRequest(orderToPost);
+         this.$store.dispatch("setBasket", []);
+         this.$store.dispatch("setSecondBasket", []);
          this.$router.push("/orders");
       },
-      printRequest: function(order) {
+      compileOrder: function() {
+         const order = {
+            time: new Date(),
+            total: this.countTotal(),
+            dishes: this.basket
+         };
+         if (this.position == "delivery") {
+            order.address = this.$refs.address.value;
+            order.phoneNumber = this.$refs.phoneNumber.value;
+            order.type = "Доставка";
+         } else if (this.position == "cafe") {
+            if (!this.takeaway) {
+               order.waiterName = this.waiterName;
+               order.table = this.$refs.table.value;
+            }
+            order.discount = this.$refs.discount.value;
+            order.type = "Кафе";
+         }
+         order.takeaway = this.takeaway;
+
+         return order;
+      },
+      printRequest: function() {
+         const order = compileOrder();
+         order.dishes = this.secondBasket;
          const data = {
             order
          };
@@ -328,6 +379,26 @@ export default {
       },
       clearBasket: function() {
          this.$store.dispatch("setBasket", []);
+         this.$store.dispatch("setSecondBasket", []);
+      },
+      printRequest: function(order, destination) {
+         order.destination = destination;
+         const data = {
+            order
+         };
+         const config = {
+            responseType: "text"
+         };
+         axios
+            // .post("/test/index.php", data, config)
+            .post("/print/example/interface/ethernet.php", data, config)
+            .then(response => {
+               console.log(response);
+               console.log("Responce was handled.");
+            })
+            .catch(error => {
+               console.log(error);
+            });
       }
    },
    mounted() {
@@ -397,6 +468,7 @@ export default {
    position: relative;
    background: #ffaeae;
    overflow: auto;
+   padding-bottom: 3rem;
 }
 form {
    position: relative;
@@ -436,9 +508,10 @@ button {
 /* Main slide */
 .clear-basket {
    padding: 0 0.3rem;
-   position: absolute;
+   position: fixed;
    bottom: 1rem;
-   left: 50%;
+   left: 150%;
+   width: 10rem;
    transform: translateX(-50%);
 }
 .basket-empty {
@@ -454,7 +527,8 @@ h3 {
    text-align: center;
    font-weight: lighter;
 }
-.dish-list {
+.dish-list,
+.change-order-container {
    padding: 0 0.5rem;
 }
 .dish-item {
@@ -565,6 +639,17 @@ select {
 }
 .cafe-form label {
    font-size: 1.2rem;
+}
+.change-order-container {
+   margin-top: 1rem;
+}
+.change-order__header {
+   display: flex;
+   justify-content: space-between;
+}
+.change-order__print-button {
+   flex: none;
+   padding: 0 0.5rem;
 }
 @media (max-width: 900px) {
    .modal-box {

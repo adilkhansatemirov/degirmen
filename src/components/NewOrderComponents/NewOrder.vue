@@ -146,6 +146,9 @@ export default {
    methods: {
       addToBasket: function(dish) {
          this.$store.dispatch("addToBasket", dish);
+         if (!this.newOrder()) {
+            this.$store.dispatch("addToSecondBasket", dish);
+         }
          this.$refs.basket.spinBasket();
       },
       openBasket() {
@@ -169,6 +172,9 @@ export default {
       //JUST CHECK IF OBJECT THERE ARE PARAMS IS ROUTE
       if (!this.newOrder()) {
          this.$store.dispatch("getDishesByOrderId", this.$route.params.orderId);
+      } else {
+         this.$store.dispatch("setBasket", []);
+         this.$store.dispatch("setSecondBasket", []);
       }
    }
 };
