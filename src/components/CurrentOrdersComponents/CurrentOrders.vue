@@ -172,7 +172,7 @@ export default {
                                     garnirHistory.counterSmall + dish.amount,
                                  counterMoney:
                                     garnirHistory.counterMoney +
-                                    garnirOrder.cost * dish.amount
+                                    Math.round(garnirOrder.cost * dish.amount)
                               };
                            } else {
                               return {
@@ -181,7 +181,7 @@ export default {
                                     garnirHistory.counterStand + dish.amount,
                                  counterMoney:
                                     garnirHistory.counterMoney +
-                                    garnirOrder.cost * dish.amount
+                                    Math.round(garnirOrder.cost * dish.amount)
                               };
                            }
                         }
@@ -209,8 +209,10 @@ export default {
                                        orderDish.amount,
                                     counterMoney:
                                        historyDish.counterMoney +
-                                       orderDish.dish.costDefault *
-                                          orderDish.amount
+                                       Math.round(
+                                          orderDish.dish.costDefault *
+                                             orderDish.amount
+                                       )
                                  };
                               } else {
                                  return {
@@ -220,8 +222,10 @@ export default {
                                        orderDish.amount,
                                     counterMoney:
                                        historyDish.counterMoney +
-                                       orderDish.dish.costDefault *
-                                          orderDish.amount
+                                       Math.round(
+                                          orderDish.dish.costDefault *
+                                             orderDish.amount
+                                       )
                                  };
                               }
                            }
@@ -237,7 +241,9 @@ export default {
                                     historyDish.counterSmall + orderDish.amount,
                                  counterMoney:
                                     historyDish.counterMoney +
-                                    orderDish.dish.cost * orderDish.amount
+                                    Math.round(
+                                       orderDish.dish.cost * orderDish.amount
+                                    )
                               };
                            } else {
                               //if any other dish except mainDish
@@ -247,7 +253,9 @@ export default {
                                     historyDish.counterStand + orderDish.amount,
                                  counterMoney:
                                     historyDish.counterMoney +
-                                    orderDish.dish.cost * orderDish.amount
+                                    Math.round(
+                                       orderDish.dish.cost * orderDish.amount
+                                    )
                               };
                            }
                         }
@@ -384,29 +392,6 @@ export default {
                   id: doc.id,
                   time: doc.data().time.toDate()
                };
-
-               // console.log(doc.data());
-
-               // const order = {
-               //    id: doc.id,
-               //    dishes: doc.data().dishes,
-               //    time: doc.data().time.toDate(),
-               //    type: doc.data().type,
-               //    total: doc.data().total
-               // };
-
-               // if (doc.data().type == "Доставка") {
-               //    order.address = doc.data().address;
-               //    order.phoneNumber = doc.data().phoneNumber;
-               // } else if (doc.data().type == "Кафе") {
-               //    if (!doc.data().takeaway) {
-               //       order.waiterName = doc.data().waiterName;
-               //       order.table = doc.data().table;
-               //    }
-               //    order.takeaway = doc.data().takeaway;
-               //    order.discount = doc.data().discount;
-               // }
-
                this.orders.push(order);
             });
          });

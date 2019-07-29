@@ -3,7 +3,7 @@
       <p class="dish-name">{{ dish.dish.name }}</p>
       <p class="dish-cost">{{ dish.dish.cost }}</p>
       <p class="dish-amount">{{ dish.amount }}</p>
-      <p class="dish-total">{{ dish.amount * dish.dish.cost }}</p>
+      <p class="dish-total">{{ Math.round(dish.amount * dish.dish.cost) }}</p>
    </li>
 </template>
 

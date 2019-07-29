@@ -92,6 +92,15 @@ export default {
             dish: baklavaToSend,
             amount
          });
+         if (!this.newOrder()) {
+            this.$store.dispatch("addToSecondBasketFloatAmount", {
+               dish: baklavaToSend,
+               amount
+            });
+         }
+      },
+      newOrder: function() {
+         return Object.keys(this.$route.params).length === 0;
       }
    }
 };

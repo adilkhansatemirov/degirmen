@@ -42,6 +42,16 @@
                         </a>
                      </div>
                   </form>
+                  <button
+                     class="button change-order__print-button"
+                     v-if="secondBasket.length !== 0"
+                     @click="printRequest()"
+                     type="button"
+                  >
+                     На кухню<font-awesome-icon
+                        icon="print"
+                     ></font-awesome-icon>
+                  </button>
                </div>
 
                <!-- DISHES SLIDE -->
@@ -93,7 +103,7 @@
                            </span>
                         </p>
                         <p class="dish-total">
-                           {{ dish.amount * dish.dish.cost }}
+                           {{ Math.round(dish.amount * dish.dish.cost) }}
                         </p>
                      </li>
                      <div class="dish-total" v-if="basket.length !== 0">
@@ -103,11 +113,6 @@
                   <div class="change-order-container" v-if="!newOrder()">
                      <h4 class="change-order__header">
                         Дозаказ
-                        <button class="button change-order__print-button" v-if="secondBasket.length !== 0" @click="printRequest()">
-                           На кухню<font-awesome-icon
-                              icon="print"
-                           ></font-awesome-icon>
-                        </button>
                      </h4>
                      <ul>
                         <li
@@ -133,7 +138,7 @@
                               </span>
                            </p>
                            <p class="dish-total">
-                              {{ dish.amount * dish.dish.cost }}
+                              {{ Math.round(dish.amount * dish.dish.cost) }}
                            </p>
                         </li>
                      </ul>
@@ -219,6 +224,15 @@
                            <font-awesome-icon icon="utensils" />
                         </button>
                      </div>
+                     <button
+                        class="button change-order__print-button"
+                        v-if="secondBasket.length !== 0"
+                        @click="printRequest($event)"
+                     >
+                        На кухню<font-awesome-icon
+                           icon="print"
+                        ></font-awesome-icon>
+                     </button>
                   </form>
                </div>
             </div>
@@ -306,7 +320,7 @@ export default {
          this.position = null;
       },
       saveOrder: function() {
-         const orderToPost = compileOrder();
+         const orderToPost = this.compileOrder();
          if (this.newOrder()) {
             //if new order
             db.collection("currentOrders")
@@ -350,9 +364,11 @@ export default {
 
          return order;
       },
-      printRequest: function() {
-         const order = compileOrder();
+      printRequest: function(event) {
+         event.preventDefault();
+         const order = this.compileOrder();
          order.dishes = this.secondBasket;
+         order.destination = "KITCHEN";
          const data = {
             order
          };
@@ -375,30 +391,11 @@ export default {
          this.basket.forEach(dish => {
             total += dish.dish.cost * dish.amount;
          });
-         return total;
+         return Math.round(total);
       },
       clearBasket: function() {
          this.$store.dispatch("setBasket", []);
          this.$store.dispatch("setSecondBasket", []);
-      },
-      printRequest: function(order, destination) {
-         order.destination = destination;
-         const data = {
-            order
-         };
-         const config = {
-            responseType: "text"
-         };
-         axios
-            // .post("/test/index.php", data, config)
-            .post("/print/example/interface/ethernet.php", data, config)
-            .then(response => {
-               console.log(response);
-               console.log("Responce was handled.");
-            })
-            .catch(error => {
-               console.log(error);
-            });
       }
    },
    mounted() {
