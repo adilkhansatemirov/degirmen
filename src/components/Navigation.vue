@@ -12,19 +12,19 @@
          </span>
          <button @click="pushToMenu()" class="li">
             Меню
-            <span>
+            <span class="icon-wrapper">
                <font-awesome-icon icon="utensils" />
             </span>
          </button>
          <router-link to="/orders" class="li">
-            Заказы
-            <span>
+            <span v-if="!adminMode">Мои заказы</span><span v-else>Заказы</span>
+            <span class="icon-wrapper">
                <font-awesome-icon icon="check-circle" />
             </span>
          </router-link>
          <router-link to="/history/today" class="li">
             История
-            <span>
+            <span class="icon-wrapper">
                <font-awesome-icon icon="clock" />
             </span>
          </router-link>
@@ -49,6 +49,11 @@ export default {
    computed: {
       isAuthentificated() {
          return this.$store.state.auth.isAuthentificated;
+      },
+      adminMode() {
+         if (this.$store.state.auth.user) {
+            return this.$store.state.auth.user.status !== "Официант";
+         } else return false;
       }
    },
    methods: {
@@ -81,9 +86,6 @@ ul {
    left: 0;
    bottom: 0;
 }
-button.li {
-   font-size: 1rem;
-}
 .li {
    padding: 0.75rem;
    flex: 1;
@@ -93,6 +95,7 @@ button.li {
    border-right: 1px solid #7400003a;
    color: #740000;
    background: #ffcfcf;
+   border-bottom: none;
 }
 .li:last-child {
    border-right: none;
@@ -100,7 +103,7 @@ button.li {
 .li:hover {
    background: #ffe4e4;
 }
-.li span {
+.icon-wrapper {
    margin-left: 0.5rem;
    font-size: 1.2rem;
 }
@@ -135,9 +138,18 @@ button.li {
    .li {
       padding: 0.4rem;
    }
-   .li span {
+   .icon-wrapper {
       margin-left: 0.5rem;
       font-size: 1rem;
+   }
+}
+@media (max-width: 400px) {
+   .li {
+      font-size: 0.9rem;
+   }
+   .icon-wrapper {
+      margin-left: 0.2rem;
+      font-size: 0.8rem;
    }
 }
 </style>

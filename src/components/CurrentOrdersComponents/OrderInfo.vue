@@ -12,17 +12,33 @@
             <p>Столик: {{ order.table }}</p>
          </div>
          <div class="print-options">
-            <span class="print-button" @click="printRequest(order, 'KITCHEN')">
+            <div class="print-button" @click="printRequest(order, 'KITCHEN')">
                <span>На кухню</span>
                <font-awesome-icon icon="print" />
-            </span>
-            <span
+            </div>
+            <div
                class="print-button"
                @click="printRequest(order, 'CASHIER_TABLE')"
             >
                <span>На кассу</span>
                <font-awesome-icon icon="print" />
-            </span>
+            </div>
+            <div
+               class="print-button"
+               @click="printRequest(order, 'KITCHEN', 'doners')"
+               v-if="orderContains('doners')"
+            >
+               <span>Донер</span>
+               <font-awesome-icon icon="print" />
+            </div>
+            <div
+               class="print-button"
+               @click="printRequest(order, 'KITCHEN', 'shashlyks')"
+               v-if="orderContains('shashlyks')"
+            >
+               <span>Шашлык</span>
+               <font-awesome-icon icon="print" />
+            </div>
          </div>
       </div>
    </div>
@@ -37,7 +53,13 @@ export default {
       }
    },
    methods: {
-      printRequest: function(order, destination) {
+      printRequest: function(orderToPrint, destination, type = null) {
+         let order = { ...orderToPrint };
+         if (type) {
+            order.dishes = order.dishes.filter(dish => dish.dish.type === type);
+         }
+         console.log(order);
+
          order.destination = destination;
          const data = {
             order
@@ -46,7 +68,6 @@ export default {
             responseType: "text"
          };
          axios
-            // .post("/test/index.php", data, config)
             .post("/print/example/interface/ethernet.php", data, config)
             .then(response => {
                console.log(response);
@@ -55,6 +76,15 @@ export default {
             .catch(error => {
                console.log(error);
             });
+      },
+      orderContains: function(type) {
+         let contains = false;
+         this.order.dishes.forEach(dish => {
+            if (dish.dish.type == type) {
+               contains = true;
+            }
+         });
+         return contains;
       }
    }
 };
@@ -66,17 +96,19 @@ export default {
    margin-bottom: 0.3rem;
    display: flex;
    justify-content: space-between;
-   align-items: center;
+   align-items: flex-start;
    margin-top: 0.5rem;
 }
 .print-options {
-   display: grid;
-   grid-template-columns: 1fr 1fr;
-   grid-gap: 1rem;
-   justify-content: space-between;
+   margin-top: 0.5rem;
+   width: 100%;
+   display: flex;
+   justify-content: flex-end;
+   flex-wrap: wrap;
 }
 .print-button {
    font-size: 1rem;
+   margin: 0 0.5rem 0.5rem;
    border: 1px solid rgb(124, 53, 53);
    border-radius: 0.5rem;
    padding: 0 0.2rem;
@@ -86,5 +118,23 @@ export default {
 }
 .print-button:hover {
    color: rgb(155, 67, 67);
+}
+@media (max-width: 600px) {
+   .order-info {
+      font-size: 1rem;
+      flex-direction: column;
+   }
+   .print-button {
+      font-size: 0.8rem;
+   }
+}
+@media (max-width: 400px) {
+   .print-options {
+      justify-content: space-between;
+   }
+   .print-button {
+      margin: 0 0.2rem 0.5rem;
+      font-size: 0.7rem;
+   }
 }
 </style>

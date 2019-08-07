@@ -2,40 +2,23 @@
    <div>
       <div class="container">
          <h2 class="title">Заказы</h2>
-         <!-- TEXTFIELD TO UNLOCK ADMIN PRIVILIGES -->
-         <div class="unlock-save-order-holder" v-if="adminMode">
-            <p class="unlock-save-order-message">
-               Введите пароль чтобы сохранить заказ или закрыть кассу
-            </p>
-            <input
-               class="unlock-save-order-input"
-               ref="passwordToSaveInput"
-               placeholder="пароль"
-               type="password"
-               v-model="passwordInput"
-            />
-         </div>
-
          <div v-if="adminMode">
             <a
                class="close-cashier-button"
                @click="clearHistory()"
-               v-if="orders.length === 0 && passwordCorrect === passwordInput"
+               v-if="orders.length === 0"
             >
                <p v-if="loading">Подождите..</p>
                <p v-else>Закрыть кассу на сегодня</p>
             </a>
-            <a
-               class="close-cashier-button disabled"
-               v-else-if="
-                  orders.length === 0 && passwordCorrect !== passwordInput
-               "
-               >Закрыть кассу на сегодня</a
-            >
          </div>
 
          <ul class="orders-list">
-            <li class="order-item" v-for="order in orders" :key="order.id">
+            <li
+               class="order-item"
+               v-for="order in filteredOrders"
+               :key="order.id"
+            >
                <div class="order-header">
                   <p class="order-type">{{ order.type }}</p>
                   <p class="order-time">{{ getTime(order) }}</p>
@@ -60,13 +43,9 @@
                      <a class="button" @click="updateOrder(order)">Изменить</a>
                      <a class="button" @click="cancelOrder(order)">Отменить</a>
                      <div v-if="adminMode">
-                        <a
-                           class="button"
-                           v-if="passwordCorrect == passwordInput"
-                           @click="archiveOrder(order)"
+                        <a class="button" @click="archiveOrder(order)"
                            >Сохранить</a
                         >
-                        <a class="button disabled" v-else>Сохранить</a>
                      </div>
                   </div>
                </div>
@@ -107,8 +86,6 @@ export default {
             "November",
             "December"
          ],
-         passwordInput: "",
-         passwordCorrect: "hello",
          loading: false
       };
    },
@@ -143,7 +120,6 @@ export default {
          return order.waiterName === this.waiterName;
       },
       archiveOrder: function(order) {
-         // this.passwordInput = "";
          this.updateHistory(order, "Today");
          this.updateHistory(order, this.getMonth(order));
          this.$store.dispatch("saveOrderToCheckHistory", order);
@@ -160,6 +136,24 @@ export default {
                let deliveryMoney = doc.data().deliveryMoney;
                let discountMoney = doc.data().discountMoney;
                let counterMoney = doc.data().counterMoney;
+
+               //count discount and delivery money
+               if (order.type === "Кафе") {
+                  waitersStats = waitersStats.map(waiter => {
+                     if (waiter.name === order.waiterName) {
+                        return {
+                           ...waiter,
+                           counterMoney:
+                              waiter.counterMoney + service(order) / 2,
+                           counterOrders: waiter.counterOrders + 1
+                        };
+                     }
+                     return waiter;
+                  });
+                  discountMoney += countDiscount(order);
+               } else {
+                  deliveryMoney += 300;
+               }
 
                const updateGarnirHistory = dish => {
                   dish.dish.garnirs.forEach(garnirOrder => {
@@ -263,24 +257,7 @@ export default {
                      }
                   );
                });
-
-               //count discount and delivery money
-               if (order.type === "Кафе") {
-                  waitersStats = waitersStats.map(waiter => {
-                     if (waiter.name === order.waiterName) {
-                        return {
-                           ...waiter,
-                           counterMoney:
-                              waiter.counterMoney + service(order) / 2,
-                           counterOrders: waiter.counterOrders + 1
-                        };
-                     }
-                     return waiter;
-                  });
-                  discountMoney += countDiscount(order);
-               } else {
-                  deliveryMoney += 300;
-               }
+               
                counterMoney += order.total;
 
                db.collection("history")
@@ -365,7 +342,6 @@ export default {
                         })
                         .then(() => {
                            alert("Завершено");
-                           this.passwordInput = "";
                         });
                   });
             });
@@ -407,6 +383,22 @@ export default {
             return this.$store.state.auth.user.name;
          }
          return null;
+      },
+      filteredOrders() {
+         if (this.adminMode) {
+            return this.orders;
+         }
+
+         let ordersOfThisWaiter = [];
+         this.orders.forEach(order => {
+            if (
+               order.hasOwnProperty("waiterName") &&
+               this.waiterName === order.waiterName
+            ) {
+               ordersOfThisWaiter.push(order);
+            }
+         });
+         return ordersOfThisWaiter;
       }
    }
 };
