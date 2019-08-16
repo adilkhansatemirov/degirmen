@@ -43,9 +43,13 @@
                      <a class="button" @click="updateOrder(order)">Изменить</a>
                      <a class="button" @click="cancelOrder(order)">Отменить</a>
                      <div v-if="adminMode">
-                        <a class="button" @click="archiveOrder(order)"
+                        <a
+                           v-if="!loading"
+                           class="button"
+                           @click="archiveOrder(order)"
                            >Сохранить</a
                         >
+                        <a v-else class="button disabled">Подождите..</a>
                      </div>
                   </div>
                </div>
@@ -106,7 +110,7 @@ export default {
             .doc(order.id)
             .delete()
             .then(() => {
-               console.log("Document successfully deleted!");
+               console.log("cancelOrder complete");
             })
             .catch(err => {
                console.log(err);
@@ -120,6 +124,10 @@ export default {
          return order.waiterName === this.waiterName;
       },
       archiveOrder: function(order) {
+         const self = this;
+         this.$nextTick(() => {
+            self.loading = true;
+         });
          this.updateHistory(order, "Today");
          this.updateHistory(order, this.getMonth(order));
          this.$store.dispatch("saveOrderToCheckHistory", order);
@@ -257,7 +265,6 @@ export default {
                      }
                   );
                });
-               
                counterMoney += order.total;
 
                db.collection("history")
@@ -268,6 +275,15 @@ export default {
                      deliveryMoney,
                      discountMoney,
                      counterMoney
+                  })
+                  .then(() => {
+                     console.log("Update history", time);
+                     if (this.getMonth(order) === time) {
+                        const self = this;
+                        this.$nextTick(() => {
+                           self.loading = false;
+                        });
+                     }
                   });
             });
       },

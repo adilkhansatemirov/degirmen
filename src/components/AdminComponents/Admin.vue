@@ -4,7 +4,7 @@
       <!-- <input v-model="text" type="text" placeholder="text"> -->
       <!-- <button @click.prevent="postRequest()">post data</button> -->
       <!-- <button @click="fillHistory()">Fill history</button> -->
-      <button @click="countAndFix()">BUTTON</button>
+      <button>BUTTON</button>
    </div>
 </template>
 
@@ -405,11 +405,9 @@ export default {
             });
       },
       countAndFix: function() {
-         let aigerimOrders = 0;
-         let aigerimMoney = 0;
-
-         let edaOrders = 0;
-         let edaMoney = 0;
+         let waiterToSearch = "Айдана";
+         let waiterOrders = 0;
+         let waitersMoney = 0;
 
          db.collection("historyChecks")
             .get()
@@ -417,17 +415,13 @@ export default {
                snapshot.forEach(doc => {
                   if (
                      doc.data().waiterName &&
-                     doc.data().waiterName == "Айгерим"
+                     doc.data().waiterName == waiterToSearch
                   ) {
-                     aigerimOrders++;
-                     aigerimMoney += doc.data().total / 20;
+                     waiterOrders++;
+                     waitersMoney += doc.data().total / 20;
                   }
-                  if (doc.data().waiterName && doc.data().waiterName == "Эда") {
-                     edaOrders++;
-                     edaMoney += doc.data().total / 20;
-                  }
-                  console.log(edaOrders, edaMoney);
-                  console.log(aigerimOrders, aigerimMoney);
+
+                  console.log(waiterOrders, waitersMoney);
                });
             });
       }

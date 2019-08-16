@@ -4,13 +4,11 @@ export default {
   mutations: {},
   actions: {
     saveOrderToCheckHistory: (context, order) => {
-      console.log(order.id);
-
       db.collection("historyChecks")
         .doc(order.id)
         .set(order)
         .then(() => {
-          console.log("Saved");
+          console.log("saveOrderToCheckHistory complete");
         })
         .catch(err => {
           console.log(err);
