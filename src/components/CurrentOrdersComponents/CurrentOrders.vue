@@ -160,7 +160,7 @@ export default {
                   });
                   discountMoney += countDiscount(order);
                } else {
-                  deliveryMoney += 300;
+                  deliveryMoney += 400;
                }
 
                const updateGarnirHistory = dish => {
