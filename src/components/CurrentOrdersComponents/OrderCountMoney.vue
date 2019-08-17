@@ -9,7 +9,7 @@
             <p class="order-total">Скидка: -{{ order.discount }}%</p>
          </div>
       </div>
-      <p v-else class="order-total">Доставка: 300</p>
+      <p v-else class="order-total">Доставка: 400</p>
 
       <p class="order-total">К оплате: {{ toPay(order) }}</p>
    </div>
@@ -46,7 +46,7 @@ export default {
                order.total + this.service(order) - this.countDiscount(order)
             );
          } else {
-            return order.total + 300;
+            return order.total + 400;
          }
       }
    }
