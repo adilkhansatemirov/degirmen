@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div class="order-info-container">
       <div class="order-info" v-if="order.type == 'Доставка'">
          <p>Адрес: {{ order.address }}</p>
       </div>
@@ -11,34 +11,34 @@
             <p>Официант: {{ order.waiterName }}</p>
             <p>Столик: {{ order.table }}</p>
          </div>
-         <div class="print-options">
-            <div class="print-button" @click="printRequest(order, 'KITCHEN')">
-               <span>На кухню</span>
-               <font-awesome-icon icon="print" />
-            </div>
-            <div
-               class="print-button"
-               @click="printRequest(order, 'CASHIER_TABLE')"
-            >
-               <span>На кассу</span>
-               <font-awesome-icon icon="print" />
-            </div>
-            <div
-               class="print-button"
-               @click="printRequest(order, 'KITCHEN', 'doners')"
-               v-if="orderContains('doners')"
-            >
-               <span>Донер</span>
-               <font-awesome-icon icon="print" />
-            </div>
-            <div
-               class="print-button"
-               @click="printRequest(order, 'KITCHEN', 'shashlyks')"
-               v-if="orderContains('shashlyks')"
-            >
-               <span>Шашлык</span>
-               <font-awesome-icon icon="print" />
-            </div>
+      </div>
+      <div class="print-options">
+         <div class="print-button" @click="printRequest(order, 'KITCHEN')">
+            <span>На кухню</span>
+            <font-awesome-icon icon="print" />
+         </div>
+         <div
+            class="print-button"
+            @click="printRequest(order, 'CASHIER_TABLE')"
+         >
+            <span>На кассу</span>
+            <font-awesome-icon icon="print" />
+         </div>
+         <div
+            class="print-button"
+            @click="printRequest(order, 'KITCHEN', 'doners')"
+            v-if="orderContains('doners')"
+         >
+            <span>Донер</span>
+            <font-awesome-icon icon="print" />
+         </div>
+         <div
+            class="print-button"
+            @click="printRequest(order, 'KITCHEN', 'shashlyks')"
+            v-if="orderContains('shashlyks')"
+         >
+            <span>Шашлык</span>
+            <font-awesome-icon icon="print" />
          </div>
       </div>
    </div>
@@ -91,17 +91,19 @@ export default {
 </script>
 
 <style scoped>
+.order-info-container {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
 .order-info {
    font-size: 1.2rem;
    margin-bottom: 0.3rem;
-   display: flex;
-   justify-content: space-between;
-   align-items: flex-start;
    margin-top: 0.5rem;
 }
 .print-options {
    margin-top: 0.5rem;
-   width: 100%;
+   flex: 1;
    display: flex;
    justify-content: flex-end;
    flex-wrap: wrap;
@@ -129,9 +131,6 @@ export default {
    }
 }
 @media (max-width: 400px) {
-   .print-options {
-      justify-content: space-between;
-   }
    .print-button {
       margin: 0 0.2rem 0.5rem;
       font-size: 0.7rem;
