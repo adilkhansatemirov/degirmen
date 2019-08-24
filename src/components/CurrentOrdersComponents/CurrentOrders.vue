@@ -12,7 +12,7 @@
                <p v-else>Закрыть кассу на сегодня</p>
             </a>
          </div>
-         <div class="show-orders__container">
+         <div class="show-orders__container" v-if="!adminMode">
             <div class="show-orders__input-group">
                <input
                   class="show-orders__input-label"
