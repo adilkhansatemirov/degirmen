@@ -12,7 +12,37 @@
                <p v-else>Закрыть кассу на сегодня</p>
             </a>
          </div>
-
+         <div class="show-orders__container">
+            <div class="show-orders__input-group">
+               <input
+                  class="show-orders__input-label"
+                  type="radio"
+                  id="show-orders__my-only"
+                  name="radio-group"
+                  value="myOrdersOnly"
+                  v-model="ordersToShow"
+                  checked
+               />
+               <label
+                  class="show-orders__input-input"
+                  for="show-orders__my-only"
+                  >Только мои</label
+               >
+            </div>
+            <div class="show-orders__input-group">
+               <input
+                  class="show-orders__input-label"
+                  type="radio"
+                  id="show-orders__all"
+                  name="radio-group"
+                  value="allOrders"
+                  v-model="ordersToShow"
+               />
+               <label class="show-orders__input-input" for="show-orders__all"
+                  >Все</label
+               >
+            </div>
+         </div>
          <ul class="orders-list">
             <li
                class="order-item"
@@ -76,6 +106,7 @@ export default {
    data() {
       return {
          orders: [],
+         ordersToShow: "myOrdersOnly",
          months: [
             "January",
             "February",
@@ -401,7 +432,7 @@ export default {
          return null;
       },
       filteredOrders() {
-         if (this.adminMode) {
+         if (this.adminMode || this.ordersToShow === "allOrders") {
             return this.orders;
          }
 
@@ -523,6 +554,59 @@ export default {
    padding: 0.3rem;
    border-radius: 0rem 0.3rem 0.3rem 0rem;
 }
+.show-orders__container {
+   display: flex;
+   justify-content: space-evenly;
+   margin: 10px 0 20px;
+}
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+   position: absolute;
+   left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label {
+   position: relative;
+   padding-left: 28px;
+   cursor: pointer;
+   line-height: 20px;
+   display: inline-block;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+   content: "";
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 18px;
+   height: 18px;
+   border: 1px solid #ddd;
+   border-radius: 100%;
+   background: #fff;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+   content: "";
+   width: 12px;
+   height: 12px;
+   background: #f87da9;
+   position: absolute;
+   top: 4px;
+   left: 4px;
+   border-radius: 100%;
+   -webkit-transition: all 0.2s ease;
+   transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+   opacity: 0;
+   -webkit-transform: scale(0);
+   transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+   opacity: 1;
+   -webkit-transform: scale(1);
+   transform: scale(1);
+}
 @media (max-width: 800px) {
    .unlock-save-order-holder {
       flex-direction: column;
@@ -533,6 +617,11 @@ export default {
    .unlock-save-order-input {
       text-align: center;
       border-radius: 0rem 0rem 0.3rem 0.3rem;
+   }
+}
+@media (max-width: 500px) {
+   .order-item {
+      font-size: 13px;
    }
 }
 </style>

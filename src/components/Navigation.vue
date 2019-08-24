@@ -17,7 +17,7 @@
             </span>
          </button>
          <router-link to="/orders" class="li">
-            <span v-if="!adminMode">Мои заказы</span><span v-else>Заказы</span>
+            Заказы
             <span class="icon-wrapper">
                <font-awesome-icon icon="check-circle" />
             </span>
