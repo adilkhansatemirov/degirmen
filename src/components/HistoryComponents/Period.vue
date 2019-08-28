@@ -5,158 +5,167 @@
          {{ routePosition }}
       </h4>
 
-      <!-- SOUPS -->
-      <v-dishes-group
-         :dishes="soups"
-         :sectionName="'Супы'"
-         :portionSmall="'Половина'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+      <div class="Period__dishes-statistics" v-if="adminMode">
+         <!-- SOUPS -->
+         <v-dishes-group
+            :dishes="soups"
+            :sectionName="'Супы'"
+            :portionSmall="'Половина'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- MAIN DISHES -->
-      <v-dishes-group
-         :dishes="mainDishes"
-         :sectionName="'Горячие блюда'"
-         :portionSmall="'Половина'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- MAIN DISHES -->
+         <v-dishes-group
+            :dishes="mainDishes"
+            :sectionName="'Горячие блюда'"
+            :portionSmall="'Половина'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- DONERS -->
-      <v-dishes-group
-         :dishes="doners"
-         :sectionName="'Донер меню'"
-         :portionSmall="'Стандарт'"
-         :portionStand="'Полтора'"
-      ></v-dishes-group>
+         <!-- DONERS -->
+         <v-dishes-group
+            :dishes="doners"
+            :sectionName="'Донер меню'"
+            :portionSmall="'Стандарт'"
+            :portionStand="'Полтора'"
+         ></v-dishes-group>
 
-      <!-- PIZZAS -->
-      <v-dishes-group
-         :dishes="pizzas"
-         :sectionName="'Пиццы'"
-         :portionSmall="'24см'"
-         :portionStand="'38см'"
-      ></v-dishes-group>
+         <!-- PIZZAS -->
+         <v-dishes-group
+            :dishes="pizzas"
+            :sectionName="'Пиццы'"
+            :portionSmall="'24см'"
+            :portionStand="'38см'"
+         ></v-dishes-group>
 
-      <!-- GARNIRS -->
-      <v-dishes-group
-         :dishes="garnirs"
-         :sectionName="'Гарниры'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- GARNIRS -->
+         <v-dishes-group
+            :dishes="garnirs"
+            :sectionName="'Гарниры'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- SALATS -->
-      <v-dishes-group
-         :dishes="salats"
-         :sectionName="'Салаты'"
-         :portionSmall="'Половина'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- SALATS -->
+         <v-dishes-group
+            :dishes="salats"
+            :sectionName="'Салаты'"
+            :portionSmall="'Половина'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- SHASHLYKS -->
-      <v-dishes-group
-         :dishes="shashlyks"
-         :sectionName="'Шашлыки'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- SHASHLYKS -->
+         <v-dishes-group
+            :dishes="shashlyks"
+            :sectionName="'Шашлыки'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- BREAKFASTS -->
-      <v-dishes-group
-         :dishes="breakfasts"
-         :sectionName="'Завтраки'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- BREAKFASTS -->
+         <v-dishes-group
+            :dishes="breakfasts"
+            :sectionName="'Завтраки'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- TANDYRS -->
-      <v-dishes-group
-         :dishes="tandyrs"
-         :sectionName="'Тандыр меню'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- TANDYRS -->
+         <v-dishes-group
+            :dishes="tandyrs"
+            :sectionName="'Тандыр меню'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- CAKES -->
-      <v-dishes-group
-         :dishes="cakes"
-         :sectionName="'Пирожные'"
-         :portionSmall="'200гр'"
-         :portionStand="'500гр'"
-      ></v-dishes-group>
+         <!-- CAKES -->
+         <v-dishes-group
+            :dishes="cakes"
+            :sectionName="'Пирожные'"
+            :portionSmall="'200гр'"
+            :portionStand="'500гр'"
+         ></v-dishes-group>
 
-      <!-- BAKLAVAS -->
-      <v-dishes-group
-         :dishes="baklavas"
-         :sectionName="'Баклава'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- BAKLAVAS -->
+         <v-dishes-group
+            :dishes="baklavas"
+            :sectionName="'Баклава'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- COOCKIES -->
-      <v-dishes-group
-         :dishes="coockies"
-         :sectionName="'Печенье'"
-         :portionStand="'Киллограм'"
-      ></v-dishes-group>
+         <!-- COOCKIES -->
+         <v-dishes-group
+            :dishes="coockies"
+            :sectionName="'Печенье'"
+            :portionStand="'Киллограм'"
+         ></v-dishes-group>
 
-      <!-- BREADS -->
-      <v-dishes-group
-         :dishes="breads"
-         :sectionName="'Хлеб'"
-         :portionStand="'Штука'"
-      ></v-dishes-group>
+         <!-- BREADS -->
+         <v-dishes-group
+            :dishes="breads"
+            :sectionName="'Хлеб'"
+            :portionStand="'Штука'"
+         ></v-dishes-group>
 
-      <!-- BAKERYS -->
-      <v-dishes-group
-         :dishes="bakerys"
-         :sectionName="'Выпечка'"
-         :portionStand="'Штука'"
-      ></v-dishes-group>
+         <!-- BAKERYS -->
+         <v-dishes-group
+            :dishes="bakerys"
+            :sectionName="'Выпечка'"
+            :portionStand="'Штука'"
+         ></v-dishes-group>
 
-      <!-- PIES -->
-      <v-dishes-group
-         :dishes="pies"
-         :sectionName="'Торты'"
-         :portionStand="'Киллограм'"
-      ></v-dishes-group>
+         <!-- PIES -->
+         <v-dishes-group
+            :dishes="pies"
+            :sectionName="'Торты'"
+            :portionStand="'Киллограм'"
+         ></v-dishes-group>
 
-      <!-- ICECREAMS -->
-      <v-dishes-group
-         :dishes="iceCreams"
-         :sectionName="'Мороженое'"
-         :portionStand="'Порция'"
-      ></v-dishes-group>
+         <!-- ICECREAMS -->
+         <v-dishes-group
+            :dishes="iceCreams"
+            :sectionName="'Мороженое'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- HOT DRINKS -->
-      <v-dishes-group
-         :dishes="hotDrinks"
-         :sectionName="'Горячие напитки'"
-         :portionSmall="'Чашка'"
-         :portionStand="'Чайник'"
-      ></v-dishes-group>
+         <!-- COCKTAILS -->
+         <v-dishes-group
+            :dishes="cocktails"
+            :sectionName="'Коктейли'"
+            :portionStand="'Порция'"
+         ></v-dishes-group>
 
-      <!-- DRINKS -->
-      <v-dishes-group
-         :dishes="drinks"
-         :sectionName="'Напитки'"
-         :portionSmall="'0.5л'"
-         :portionStand="'1л'"
-      ></v-dishes-group>
+         <!-- HOT DRINKS -->
+         <v-dishes-group
+            :dishes="hotDrinks"
+            :sectionName="'Горячие напитки'"
+            :portionSmall="'Чашка'"
+            :portionStand="'Чайник'"
+         ></v-dishes-group>
 
-      <!-- OTHERS -->
-      <v-dishes-group
-         :dishes="others"
-         :sectionName="'Другое'"
-         :portionSmall="'Большая'"
-         :portionStand="'Маленькая'"
-      ></v-dishes-group>
+         <!-- DRINKS -->
+         <v-dishes-group
+            :dishes="drinks"
+            :sectionName="'Напитки'"
+            :portionSmall="'0.5л'"
+            :portionStand="'1л'"
+         ></v-dishes-group>
 
-      <!-- MONEY STATISTICS -->
-      <div class="total-money-list">
-         <p>Общая сумма с блюд: {{ counterMoney }}</p>
-         <p>Сумма сделанных скидок: {{ discountMoney }}</p>
-         <p>Деньги за доставку: {{ deliveryMoney }}</p>
-         <p>Обслуживание: {{ waitersTotal }}</p>
-         <p>
-            В кассе:
-            {{ counterMoney - discountMoney + deliveryMoney + waitersTotal }}
-         </p>
+         <!-- OTHERS -->
+         <v-dishes-group
+            :dishes="others"
+            :sectionName="'Другое'"
+            :portionSmall="'Большая'"
+            :portionStand="'Маленькая'"
+         ></v-dishes-group>
+
+         <!-- MONEY STATISTICS -->
+         <div class="total-money-list">
+            <p>Общая сумма с блюд: {{ counterMoney }}</p>
+            <p>Сумма сделанных скидок: {{ discountMoney }}</p>
+            <p>Деньги за доставку: {{ deliveryMoney }}</p>
+            <p>Обслуживание: {{ waitersTotal }}</p>
+            <p>
+               В кассе:
+               {{ counterMoney - discountMoney + deliveryMoney + waitersTotal }}
+            </p>
+         </div>
       </div>
 
       <!-- WAITER'S MONEY -->
@@ -189,6 +198,13 @@ export default {
       "v-dishes-group": DishesGroup,
       "v-loading": Loading
    },
+   computed: {
+      adminMode() {
+         if (this.$store.state.auth.user) {
+            return this.$store.state.auth.user.status !== "Официант";
+         } else return false;
+      }
+   },
    data() {
       return {
          counterMoney: 0,
@@ -219,6 +235,9 @@ export default {
          routePosition: null,
          loading: false
       };
+   },
+   created() {
+      console.log(this.adminMode);
    },
    beforeRouteEnter(to, from, next) {
       next(vm => {

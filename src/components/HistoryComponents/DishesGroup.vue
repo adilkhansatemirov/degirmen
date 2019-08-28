@@ -57,9 +57,6 @@ export default {
          }
          return className;
       }
-   },
-   created() {
-      console.log(this.dishes);
    }
 };
 </script>
